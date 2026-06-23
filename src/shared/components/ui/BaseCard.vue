@@ -21,11 +21,11 @@ const paddings = {
 
 <template>
   <div
-    class="bg-white rounded-xl shadow-sm"
+    class="bg-white rounded-2xl shadow-(--shadow-card)"
     :class="[
       paddings[padding],
-      border ? 'border border-[#E2E8F0]' : '',
-      hover ? 'hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer' : '',
+      border ? 'border border-[#EEF0F7]' : '',
+      hover ? 'hover:shadow-(--shadow-lifted) hover:-translate-y-1 hover:border-[#DDD6FE] transition-all duration-300 cursor-pointer' : '',
     ]"
   >
     <slot />

@@ -14,11 +14,22 @@ const {
 } = useDashboard()
 
 const atendimentosOptions = computed(() => ({
-  chart: { type: 'area', height: 200, toolbar: { show: false }, sparkline: { enabled: false } },
-  stroke: { curve: 'smooth', width: 2 },
-  fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05 } },
+  chart: { type: 'area', height: 200, toolbar: { show: false }, sparkline: { enabled: false }, fontFamily: 'Inter, sans-serif' },
+  stroke: { curve: 'smooth', width: 3 },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shadeIntensity: 1,
+      type: 'vertical',
+      colorStops: [
+        { offset: 0, color: '#8B5CF6', opacity: 0.45 },
+        { offset: 100, color: '#6366F1', opacity: 0.02 },
+      ],
+    },
+  },
   colors: ['#7C5CFC'],
-  xaxis: { categories: chartLabels.value, labels: { style: { colors: '#64748B', fontSize: '11px' } } },
+  markers: { size: 0, hover: { size: 5 }, colors: ['#7C5CFC'], strokeColors: '#fff', strokeWidth: 2 },
+  xaxis: { categories: chartLabels.value, axisBorder: { show: false }, axisTicks: { show: false }, labels: { style: { colors: '#64748B', fontSize: '11px' } } },
   yaxis: { labels: { style: { colors: '#64748B', fontSize: '11px' } } },
   grid: { borderColor: '#F1F5F9', strokeDashArray: 4 },
   tooltip: { theme: 'light' },
@@ -26,11 +37,15 @@ const atendimentosOptions = computed(() => ({
 }))
 
 const financeiroOptions = computed(() => ({
-  chart: { type: 'bar', height: 200, toolbar: { show: false }, stacked: false },
-  plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+  chart: { type: 'bar', height: 200, toolbar: { show: false }, stacked: false, fontFamily: 'Inter, sans-serif' },
+  plotOptions: { bar: { borderRadius: 6, borderRadiusApplication: 'end', columnWidth: '55%' } },
+  fill: {
+    type: 'gradient',
+    gradient: { type: 'vertical', shadeIntensity: 0.25, gradientToColors: ['#16A34A', '#DC2626'], opacityFrom: 1, opacityTo: 0.85, stops: [0, 100] },
+  },
   colors: ['#22C55E', '#EF4444'],
-  legend: { position: 'top', horizontalAlign: 'left', fontSize: '12px' },
-  xaxis: { categories: chartLabels.value, labels: { style: { colors: '#64748B', fontSize: '11px' } } },
+  legend: { position: 'top', horizontalAlign: 'left', fontSize: '12px', markers: { radius: 12 } },
+  xaxis: { categories: chartLabels.value, axisBorder: { show: false }, axisTicks: { show: false }, labels: { style: { colors: '#64748B', fontSize: '11px' } } },
   yaxis: { labels: { style: { colors: '#64748B', fontSize: '11px' }, formatter: (v: number) => `R$ ${v}` } },
   grid: { borderColor: '#F1F5F9', strokeDashArray: 4 },
   dataLabels: { enabled: false },
@@ -65,47 +80,53 @@ function formatMoney(v: number) {
         </BaseCard>
 
         <template v-else>
-          <BaseCard padding="md" class="group">
-            <div class="flex items-start justify-between mb-3">
-              <div class="w-10 h-10 rounded-xl bg-[#EDE9FE] flex items-center justify-center">
-                <Users :size="20" class="text-[#7C5CFC]" />
+          <BaseCard padding="md" class="group animate-rise relative overflow-hidden">
+            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[#7C5CFC]/5 group-hover:bg-[#7C5CFC]/10 transition-colors" aria-hidden="true" />
+            <div class="flex items-start justify-between mb-3 relative">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] flex items-center justify-center shadow-[0_8px_18px_-6px_rgba(124,92,252,0.6)] group-hover:scale-105 transition-transform">
+                <Users :size="20" class="text-white" />
               </div>
               <BaseBadge variant="primary" size="sm">+2 mês</BaseBadge>
             </div>
-            <p class="text-2xl font-bold text-[#1E293B]">{{ stats.pacientesAtivos }}</p>
-            <p class="text-sm text-[#64748B] mt-0.5">Pacientes ativos</p>
+            <p class="text-3xl font-bold text-[#1E293B] tracking-tight relative">{{ stats.pacientesAtivos }}</p>
+            <p class="text-sm text-[#64748B] mt-0.5 relative">Pacientes ativos</p>
           </BaseCard>
 
-          <BaseCard padding="md">
-            <div class="flex items-start justify-between mb-3">
-              <div class="w-10 h-10 rounded-xl bg-[#DBEAFE] flex items-center justify-center">
-                <Calendar :size="20" class="text-[#1D4ED8]" />
+          <BaseCard padding="md" class="group animate-rise relative overflow-hidden" style="animation-delay: 60ms">
+            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[#3B82F6]/5 group-hover:bg-[#3B82F6]/10 transition-colors" aria-hidden="true" />
+            <div class="flex items-start justify-between mb-3 relative">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] flex items-center justify-center shadow-[0_8px_18px_-6px_rgba(59,130,246,0.6)] group-hover:scale-105 transition-transform">
+                <Calendar :size="20" class="text-white" />
               </div>
             </div>
-            <p class="text-2xl font-bold text-[#1E293B]">{{ stats.consultasHoje }}</p>
-            <p class="text-sm text-[#64748B] mt-0.5">Consultas hoje</p>
+            <p class="text-3xl font-bold text-[#1E293B] tracking-tight relative">{{ stats.consultasHoje }}</p>
+            <p class="text-sm text-[#64748B] mt-0.5 relative">Consultas hoje</p>
           </BaseCard>
 
-          <BaseCard padding="md">
-            <div class="flex items-start justify-between mb-3">
-              <div class="w-10 h-10 rounded-xl bg-[#DCFCE7] flex items-center justify-center">
-                <DollarSign :size="20" class="text-[#16A34A]" />
+          <BaseCard padding="md" class="group animate-rise relative overflow-hidden" style="animation-delay: 120ms">
+            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[#22C55E]/5 group-hover:bg-[#22C55E]/10 transition-colors" aria-hidden="true" />
+            <div class="flex items-start justify-between mb-3 relative">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#16A34A] flex items-center justify-center shadow-[0_8px_18px_-6px_rgba(34,197,94,0.6)] group-hover:scale-105 transition-transform">
+                <DollarSign :size="20" class="text-white" />
               </div>
-              <TrendingUp :size="16" class="text-[#22C55E]" />
+              <span class="inline-flex items-center gap-1 text-xs font-semibold text-[#16A34A]">
+                <TrendingUp :size="14" /> +12%
+              </span>
             </div>
-            <p class="text-2xl font-bold text-[#1E293B]">{{ formatMoney(stats.receitaMes) }}</p>
-            <p class="text-sm text-[#64748B] mt-0.5">Receita do mês</p>
+            <p class="text-3xl font-bold text-[#1E293B] tracking-tight relative">{{ formatMoney(stats.receitaMes) }}</p>
+            <p class="text-sm text-[#64748B] mt-0.5 relative">Receita do mês</p>
           </BaseCard>
 
-          <BaseCard padding="md">
-            <div class="flex items-start justify-between mb-3">
-              <div class="w-10 h-10 rounded-xl bg-[#FEF3C7] flex items-center justify-center">
-                <Clock :size="20" class="text-[#D97706]" />
+          <BaseCard padding="md" class="group animate-rise relative overflow-hidden" style="animation-delay: 180ms">
+            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-[#F59E0B]/5 group-hover:bg-[#F59E0B]/10 transition-colors" aria-hidden="true" />
+            <div class="flex items-start justify-between mb-3 relative">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center shadow-[0_8px_18px_-6px_rgba(245,158,11,0.6)] group-hover:scale-105 transition-transform">
+                <Clock :size="20" class="text-white" />
               </div>
               <BaseBadge variant="warning" dot>Ao vivo</BaseBadge>
             </div>
-            <p class="text-2xl font-bold text-[#1E293B]">{{ stats.emEspera }}</p>
-            <p class="text-sm text-[#64748B] mt-0.5">Em espera</p>
+            <p class="text-3xl font-bold text-[#1E293B] tracking-tight relative">{{ stats.emEspera }}</p>
+            <p class="text-sm text-[#64748B] mt-0.5 relative">Em espera</p>
           </BaseCard>
         </template>
       </div>

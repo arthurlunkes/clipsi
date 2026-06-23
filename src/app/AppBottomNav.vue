@@ -17,7 +17,7 @@ const isActive = (to: string) => route.path === to || route.path.startsWith(to +
 
 <template>
   <nav
-    class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E2E8F0] z-20 safe-area-pb"
+    class="lg:hidden fixed bottom-0 left-0 right-0 glass border-t border-white/60 z-20 safe-area-pb shadow-[0_-8px_30px_-12px_rgba(16,24,40,0.15)]"
     aria-label="Navegação móvel"
   >
     <div class="flex items-stretch">
@@ -25,17 +25,22 @@ const isActive = (to: string) => route.path === to || route.path.startsWith(to +
         v-for="item in items"
         :key="item.to"
         :to="item.to"
-        class="flex-1 flex flex-col items-center justify-center gap-1 py-2 px-1 text-xs font-medium transition-colors min-h-[60px]"
+        class="relative flex-1 flex flex-col items-center justify-center gap-1 py-2 px-1 text-xs font-medium transition-colors min-h-[60px] group"
         :class="isActive(item.to) ? 'text-[#7C5CFC]' : 'text-[#94A3B8]'"
         :aria-current="isActive(item.to) ? 'page' : undefined"
       >
-        <component
-          :is="item.icon"
-          :size="20"
-          :class="isActive(item.to) ? 'text-[#7C5CFC]' : 'text-[#94A3B8]'"
-        />
+        <span
+          class="flex items-center justify-center w-11 h-7 rounded-full transition-all duration-200"
+          :class="isActive(item.to) ? 'gradient-primary-soft' : 'group-active:bg-[#F1F5F9]'"
+        >
+          <component
+            :is="item.icon"
+            :size="20"
+            class="transition-transform duration-200"
+            :class="isActive(item.to) ? 'text-[#7C5CFC] scale-110' : 'text-[#94A3B8]'"
+          />
+        </span>
         <span>{{ item.label }}</span>
-        <span v-if="isActive(item.to)" class="absolute bottom-0 w-8 h-0.5 bg-[#7C5CFC] rounded-t-full" aria-hidden="true" />
       </RouterLink>
     </div>
   </nav>

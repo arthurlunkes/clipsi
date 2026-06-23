@@ -42,8 +42,8 @@ const emit = defineEmits<{
       :required="required"
       :aria-invalid="!!error"
       :aria-describedby="error ? `${id}-error` : hint ? `${id}-hint` : undefined"
-      class="w-full px-3 py-2 text-sm bg-white border rounded-lg transition-colors placeholder-[#94A3B8] text-[#1E293B] disabled:bg-[#F1F5F9] disabled:cursor-not-allowed"
-      :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20 outline-none' : 'border-[#E2E8F0] focus:border-[#7C5CFC] focus:ring-2 focus:ring-[#7C5CFC]/20 outline-none'"
+      class="w-full px-3.5 py-2.5 text-sm bg-white border rounded-xl transition-all duration-200 placeholder-[#94A3B8] text-[#1E293B] disabled:bg-[#F1F5F9] disabled:cursor-not-allowed"
+      :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/15 outline-none' : 'border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#7C5CFC] focus:ring-4 focus:ring-[#7C5CFC]/15 outline-none'"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
 

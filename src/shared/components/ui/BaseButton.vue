@@ -20,14 +20,14 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const classes = computed(() => {
-  const base = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-150 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none'
+  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none select-none active:scale-[0.97]'
 
   const variants = {
-    primary: 'bg-[#7C5CFC] text-white hover:bg-[#5B3FD4] focus-visible:ring-[#7C5CFC] shadow-sm hover:shadow-md',
+    primary: 'gradient-primary text-white hover:brightness-105 focus-visible:ring-[#7C5CFC] shadow-primary hover:-translate-y-0.5',
     secondary: 'bg-[#EDE9FE] text-[#7C5CFC] hover:bg-[#DDD6FE] focus-visible:ring-[#7C5CFC]',
-    danger: 'bg-[#EF4444] text-white hover:bg-[#DC2626] focus-visible:ring-[#EF4444] shadow-sm',
+    danger: 'bg-[#EF4444] text-white hover:bg-[#DC2626] focus-visible:ring-[#EF4444] shadow-[0_8px_20px_-8px_rgba(239,68,68,0.6)] hover:-translate-y-0.5',
     ghost: 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#1E293B] focus-visible:ring-[#7C5CFC]',
-    outline: 'border border-[#E2E8F0] text-[#1E293B] hover:bg-[#F8FAFC] focus-visible:ring-[#7C5CFC] bg-white',
+    outline: 'border border-[#E2E8F0] text-[#1E293B] hover:bg-[#F8FAFC] hover:border-[#C4B5FD] focus-visible:ring-[#7C5CFC] bg-white shadow-soft',
   }
 
   const sizes = {
