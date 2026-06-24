@@ -208,4 +208,4 @@ Configure no repositório (Settings → Secrets and variables → Actions):
 | Variable | `SSH_PORT`        | Porta SSH (padrão `22`)                                     |
 | Variable | `DEPLOY_PATH`     | Diretório web servido pelo nginx (padrão `/var/www/clipsi`) |
 | Variable | `DEPLOY_URL`      | URL pública (exibida no GitHub) — opcional                  |
-| Secret   | `SSH_PRIVATE_KEY` | Chave privada SSH para o deploy                             |
+| Secret   | `SSH_PRIVATE_KEY` | Chave privada SSH para o deploy                             |     
