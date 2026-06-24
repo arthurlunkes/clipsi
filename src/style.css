@@ -1,21 +1,24 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/* Habilita o variante `dark:` baseado na classe `.dark` em <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #7C5CFC;
-  --color-primary-light: #A78BFA;
-  --color-primary-dark: #5B3FD4;
-  --color-secondary: #A78BFA;
-  --color-accent: #EC4899;
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-info: #3B82F6;
-  --color-bg: #F6F7FB;
-  --color-surface: #FFFFFF;
-  --color-border: #E7E9F2;
-  --color-text: #1E293B;
-  --color-text-muted: #64748B;
-  --color-text-light: #94A3B8;
+  --color-primary: #7c5cfc;
+  --color-primary-light: #a78bfa;
+  --color-primary-dark: #5b3fd4;
+  --color-secondary: #a78bfa;
+  --color-accent: #ec4899;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+  --color-bg: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-border: #e7e9f2;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-text-light: #94a3b8;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
@@ -47,15 +50,18 @@
     color: var(--color-text);
     margin: 0;
     padding: 0;
-    background-color: #F6F7FB;
+    background-color: #f6f7fb;
     background-image:
-      radial-gradient(60rem 60rem at 110% -10%, rgba(124, 92, 252, 0.10), transparent 60%),
+      radial-gradient(60rem 60rem at 110% -10%, rgba(124, 92, 252, 0.1), transparent 60%),
       radial-gradient(50rem 50rem at -10% 0%, rgba(59, 130, 246, 0.08), transparent 55%),
       radial-gradient(45rem 45rem at 50% 120%, rgba(236, 72, 153, 0.06), transparent 60%);
     background-attachment: fixed;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }
@@ -76,14 +82,14 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: #cbd5e1;
     border-radius: 99px;
     border: 2px solid transparent;
     background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #94A3B8;
+    background: #94a3b8;
     background-clip: padding-box;
   }
 }
@@ -91,15 +97,19 @@
 @layer components {
   /* ---- Reusable visual utilities ---- */
   .gradient-primary {
-    background-image: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+    background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
   }
 
   .gradient-primary-soft {
-    background-image: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%);
+    background-image: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.12) 0%,
+      rgba(99, 102, 241, 0.12) 100%
+    );
   }
 
   .text-gradient {
-    background-image: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+    background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -117,15 +127,17 @@
 
   /* ---- FullCalendar theming ---- */
   .fc .fc-button {
-    background-image: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%) !important;
-    background-color: #7C5CFC !important;
+    background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%) !important;
+    background-color: #7c5cfc !important;
     border: none !important;
     border-radius: 0.625rem !important;
     font-size: 0.875rem !important;
     font-weight: 600 !important;
     padding: 0.4rem 0.8rem !important;
     box-shadow: 0 4px 12px -4px rgba(124, 92, 252, 0.5) !important;
-    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease !important;
   }
 
   .fc .fc-button:hover {
@@ -135,7 +147,7 @@
 
   .fc .fc-button:active,
   .fc .fc-button-active {
-    background-image: linear-gradient(135deg, #6D28D9 0%, #4F46E5 100%) !important;
+    background-image: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%) !important;
     transform: translateY(0);
   }
 
@@ -143,7 +155,7 @@
     font-family: var(--font-display) !important;
     font-size: 1.125rem !important;
     font-weight: 700 !important;
-    color: #1E293B !important;
+    color: #1e293b !important;
   }
 
   .fc .fc-event {
@@ -153,7 +165,9 @@
     font-size: 0.8rem !important;
     font-weight: 500 !important;
     cursor: pointer;
-    transition: filter 0.15s ease, transform 0.15s ease;
+    transition:
+      filter 0.15s ease,
+      transform 0.15s ease;
   }
 
   .fc .fc-event:hover {
@@ -168,29 +182,29 @@
   }
 
   .fc .fc-daygrid-day.fc-day-today {
-    background-color: #F3EEFF !important;
+    background-color: #f3eeff !important;
   }
 
   /* indicador de "agora" */
   .fc .fc-timegrid-now-indicator-line {
-    border-color: #EF4444 !important;
+    border-color: #ef4444 !important;
   }
   .fc .fc-timegrid-now-indicator-arrow {
-    border-color: #EF4444 !important;
-    color: #EF4444 !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
   }
 
   /* visão de lista mais respirada */
   .fc .fc-list {
     border-radius: 0.75rem;
     overflow: hidden;
-    border-color: #EEF0F7 !important;
+    border-color: #eef0f7 !important;
   }
   .fc .fc-list-day-cushion {
-    background-color: #F6F7FB !important;
+    background-color: #f6f7fb !important;
   }
   .fc .fc-list-event:hover td {
-    background-color: #F6F4FF !important;
+    background-color: #f6f4ff !important;
   }
   .fc .fc-list-event-dot {
     border-width: 5px;
@@ -198,12 +212,12 @@
   .fc-theme-standard .fc-list-day-cushion,
   .fc-theme-standard td,
   .fc-theme-standard th {
-    border-color: #EEF0F7 !important;
+    border-color: #eef0f7 !important;
   }
 
   .fc .fc-col-header-cell-cushion {
     font-weight: 600;
-    color: #64748B;
+    color: #64748b;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -212,7 +226,7 @@
 
   .fc-daygrid-day-number {
     text-decoration: none !important;
-    color: #1E293B;
+    color: #1e293b;
   }
 
   /* ---- Skeleton shimmer ---- */
@@ -224,8 +238,12 @@
   }
 
   @keyframes skeleton-loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 
   /* ---- Entrance helpers ---- */
@@ -234,14 +252,22 @@
   }
 
   @keyframes rise {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* ---- Page transition ---- */
   .page-enter-active,
   .page-leave-active {
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .page-enter-from {
@@ -253,4 +279,269 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+}
+
+/* ============================================================
+   DARK MODE
+   ------------------------------------------------------------
+   O projeto usa cores literais (ex.: text-[#1E293B], bg-white)
+   em vez de tokens semânticos. Para não reescrever centenas de
+   classes, remapeamos abaixo as cores literais quando <html>
+   tem a classe `.dark`, usando seletores de atributo que casam
+   exatamente cada token (ex.: [class~="bg-white"]).
+
+   Estas regras ficam FORA de @layer de propósito: estilos sem
+   camada vencem os utilitários do Tailwind, garantindo o
+   override independentemente da especificidade.
+   ============================================================ */
+
+.dark {
+  /* superfícies / fundos */
+  --d-bg: #0e1016;
+  --d-surface: #181b24;
+  --d-surface-2: #1f232e;
+  --d-surface-3: #262b38;
+  --d-hover: #2a3142;
+  /* bordas */
+  --d-border: #2b3140;
+  --d-border-strong: #3a4252;
+  /* texto */
+  --d-text: #e6e8ee;
+  --d-text-strong: #f3f4f8;
+  --d-text-2: #d2d6e0;
+  --d-text-3: #c2c8d6;
+  --d-muted: #98a1b3;
+  --d-light: #717a8c;
+  /* marca / status (mais claros p/ contraste no escuro) */
+  --d-primary: #a78bfa;
+  --d-primary-tint: rgba(124, 92, 252, 0.18);
+  --d-primary-tint-hover: rgba(124, 92, 252, 0.28);
+  --d-danger: #f87171;
+  --d-success: #4ade80;
+  --d-warning: #fbbf24;
+  --d-info: #60a5fa;
+
+  color: var(--d-text);
+}
+
+.dark body {
+  color: var(--d-text);
+  background-color: var(--d-bg);
+  background-image:
+    radial-gradient(60rem 60rem at 110% -10%, rgba(124, 92, 252, 0.16), transparent 60%),
+    radial-gradient(50rem 50rem at -10% 0%, rgba(59, 130, 246, 0.12), transparent 55%),
+    radial-gradient(45rem 45rem at 50% 120%, rgba(236, 72, 153, 0.08), transparent 60%);
+}
+
+/* ---- Fundos ---- */
+.dark [class~='bg-white'] {
+  background-color: var(--d-surface);
+}
+.dark [class~='bg-[#F8FAFC]'] {
+  background-color: var(--d-surface-2);
+}
+.dark [class~='bg-[#F1F5F9]'] {
+  background-color: var(--d-surface-3);
+}
+.dark [class~='bg-[#EDE9FE]'] {
+  background-color: var(--d-primary-tint);
+}
+.dark [class~='bg-[#FEE2E2]'] {
+  background-color: rgba(239, 68, 68, 0.16);
+}
+.dark [class~='bg-[#FEF3C7]'] {
+  background-color: rgba(245, 158, 11, 0.16);
+}
+.dark [class~='bg-[#FDE68A]'] {
+  background-color: rgba(245, 158, 11, 0.3);
+}
+.dark [class~='bg-[#DCFCE7]'] {
+  background-color: rgba(34, 197, 94, 0.16);
+}
+.dark [class~='bg-[#DBEAFE]'] {
+  background-color: rgba(59, 130, 246, 0.16);
+}
+
+/* ---- Texto ---- */
+.dark [class~='text-[#1E293B]'] {
+  color: var(--d-text);
+}
+.dark [class~='text-[#374151]'] {
+  color: var(--d-text-2);
+}
+.dark [class~='text-[#475569]'] {
+  color: var(--d-text-3);
+}
+.dark [class~='text-[#64748B]'] {
+  color: var(--d-muted);
+}
+.dark [class~='text-[#94A3B8]'] {
+  color: var(--d-light);
+}
+.dark [class~='text-[#7C5CFC]'] {
+  color: var(--d-primary);
+}
+.dark [class~='text-[#A78BFA]'] {
+  color: #c4b5fd;
+}
+.dark [class~='text-[#EF4444]'] {
+  color: var(--d-danger);
+}
+.dark [class~='text-[#DC2626]'] {
+  color: var(--d-danger);
+}
+.dark [class~='text-[#16A34A]'] {
+  color: var(--d-success);
+}
+.dark [class~='text-[#22C55E]'] {
+  color: var(--d-success);
+}
+.dark [class~='text-[#D97706]'] {
+  color: var(--d-warning);
+}
+.dark [class~='text-[#F59E0B]'] {
+  color: var(--d-warning);
+}
+.dark [class~='text-[#92400E]'] {
+  color: var(--d-warning);
+}
+.dark [class~='text-[#1D4ED8]'] {
+  color: var(--d-info);
+}
+
+/* ---- Placeholder ---- */
+.dark [class~='placeholder-[#94A3B8]']::placeholder {
+  color: var(--d-light);
+}
+
+/* ---- Bordas ---- */
+.dark [class~='border-[#E7E9F2]'],
+.dark [class~='border-[#E7E9F2]/70'],
+.dark [class~='border-[#EEF0F7]'],
+.dark [class~='border-[#E2E8F0]'],
+.dark [class~='border-[#F1F5F9]'] {
+  border-color: var(--d-border);
+}
+.dark [class~='divide-[#F8FAFC]'] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--d-border);
+}
+
+/* ---- Estados :hover ---- */
+.dark [class~='hover:bg-[#F1F5F9]']:hover {
+  background-color: var(--d-hover);
+}
+.dark [class~='hover:bg-[#F8FAFC]']:hover {
+  background-color: var(--d-surface-2);
+}
+.dark [class~='hover:bg-[#EDE9FE]']:hover {
+  background-color: var(--d-primary-tint-hover);
+}
+.dark [class~='hover:bg-[#DDD6FE]']:hover {
+  background-color: var(--d-primary-tint-hover);
+}
+.dark [class~='hover:bg-[#FEE2E2]']:hover {
+  background-color: rgba(239, 68, 68, 0.24);
+}
+.dark [class~='hover:bg-[#FEF3C7]']:hover {
+  background-color: rgba(245, 158, 11, 0.24);
+}
+.dark [class~='hover:bg-[#DCFCE7]']:hover {
+  background-color: rgba(34, 197, 94, 0.24);
+}
+.dark [class~='hover:bg-[#DC2626]']:hover {
+  background-color: #b91c1c;
+}
+.dark [class~='hover:bg-white/70']:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.dark [class~='hover:text-[#1E293B]']:hover {
+  color: var(--d-text-strong);
+}
+.dark [class~='hover:border-[#CBD5E1]']:hover {
+  border-color: var(--d-border-strong);
+}
+.dark [class~='hover:border-[#DDD6FE]']:hover,
+.dark [class~='hover:border-[#C4B5FD]']:hover {
+  border-color: rgba(124, 92, 252, 0.5);
+}
+
+/* ---- Estados :disabled ---- */
+.dark [class~='disabled:bg-[#F1F5F9]']:disabled {
+  background-color: var(--d-surface-2);
+}
+
+/* ---- Sidebar / Header (vidro) ---- */
+.dark .glass {
+  background-color: rgba(24, 27, 36, 0.72);
+}
+.dark [class~='border-white/60'] {
+  border-color: var(--d-border);
+}
+
+/* ---- Scrollbar ---- */
+.dark ::-webkit-scrollbar-thumb {
+  background: #3a4252;
+  background-clip: padding-box;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4a5468;
+  background-clip: padding-box;
+}
+
+/* ---- Skeleton ---- */
+.dark .skeleton {
+  background: linear-gradient(90deg, #1f232e 25%, #2a3142 50%, #1f232e 75%);
+  background-size: 200% 100%;
+}
+
+/* ---- FullCalendar ---- */
+.dark .fc {
+  --fc-border-color: var(--d-border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: var(--d-surface-2);
+}
+.dark .fc .fc-toolbar-title {
+  color: var(--d-text) !important;
+}
+.dark .fc .fc-col-header-cell-cushion {
+  color: var(--d-muted);
+}
+.dark .fc .fc-daygrid-day-number {
+  color: var(--d-text);
+}
+.dark .fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(124, 92, 252, 0.12) !important;
+}
+.dark .fc-theme-standard .fc-list-day-cushion,
+.dark .fc-theme-standard td,
+.dark .fc-theme-standard th {
+  border-color: var(--d-border) !important;
+}
+.dark .fc .fc-list {
+  border-color: var(--d-border) !important;
+}
+.dark .fc .fc-list-day-cushion {
+  background-color: var(--d-surface-2) !important;
+}
+.dark .fc .fc-list-event:hover td {
+  background-color: var(--d-hover) !important;
+}
+
+/* ---- ApexCharts ---- */
+.dark .apexcharts-text,
+.dark .apexcharts-legend-text {
+  fill: var(--d-muted);
+  color: var(--d-muted) !important;
+}
+.dark .apexcharts-gridline {
+  stroke: var(--d-border);
+}
+.dark .apexcharts-tooltip {
+  background: var(--d-surface) !important;
+  border-color: var(--d-border) !important;
+  color: var(--d-text) !important;
+}
+.dark .apexcharts-tooltip-title {
+  background: var(--d-surface-2) !important;
+  border-color: var(--d-border) !important;
 }

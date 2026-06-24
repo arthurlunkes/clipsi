@@ -15,7 +15,7 @@ interface Props {
   id?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   disabled: false,
   required: false,
 })
@@ -39,10 +39,16 @@ const emit = defineEmits<{
       :required="required"
       :aria-invalid="!!error"
       class="w-full px-3 py-2 text-sm bg-white border rounded-lg transition-colors text-[#1E293B] disabled:bg-[#F1F5F9] disabled:cursor-not-allowed appearance-none cursor-pointer"
-      :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20 outline-none' : 'border-[#E2E8F0] focus:border-[#7C5CFC] focus:ring-2 focus:ring-[#7C5CFC]/20 outline-none'"
+      :class="
+        error
+          ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20 outline-none'
+          : 'border-[#E2E8F0] focus:border-[#7C5CFC] focus:ring-2 focus:ring-[#7C5CFC]/20 outline-none'
+      "
       @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
     >
-      <option v-if="placeholder" value="" disabled :selected="!modelValue">{{ placeholder }}</option>
+      <option v-if="placeholder" value="" disabled :selected="!modelValue">
+        {{ placeholder }}
+      </option>
       <option v-for="opt in options" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
     </select>
 

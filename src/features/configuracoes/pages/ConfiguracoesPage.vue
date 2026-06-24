@@ -5,7 +5,26 @@ import BaseButton from '@/shared/components/ui/BaseButton.vue'
 import BaseInput from '@/shared/components/ui/BaseInput.vue'
 import { db } from '@/infrastructure/database/db'
 import { seedDatabase } from '@/infrastructure/database/seed'
-import { Settings, BrainCircuit, Database, Trash2, RefreshCw } from 'lucide-vue-next'
+import {
+  Settings,
+  BrainCircuit,
+  Database,
+  Trash2,
+  RefreshCw,
+  Palette,
+  Sun,
+  Moon,
+  Monitor,
+} from 'lucide-vue-next'
+import { useTheme, type Theme } from '@/shared/composables/useTheme'
+
+const { theme, setTheme } = useTheme()
+
+const themeOptions: { value: Theme; label: string; icon: typeof Sun }[] = [
+  { value: 'light', label: 'Claro', icon: Sun },
+  { value: 'dark', label: 'Escuro', icon: Moon },
+  { value: 'system', label: 'Sistema', icon: Monitor },
+]
 
 const geminiKey = ref(import.meta.env.VITE_GEMINI_API_KEY ?? '')
 const resetting = ref(false)
@@ -29,6 +48,37 @@ async function reseed() {
 
 <template>
   <div class="p-4 lg:p-6 max-w-2xl mx-auto space-y-5">
+    <!-- Aparência -->
+    <BaseCard padding="md">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 bg-[#EDE9FE] rounded-lg flex items-center justify-center">
+          <Palette :size="18" class="text-[#7C5CFC]" />
+        </div>
+        <div>
+          <h2 class="text-base font-semibold text-[#1E293B]">Aparência</h2>
+          <p class="text-xs text-[#64748B]">Escolha o tema da interface</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <button
+          v-for="opt in themeOptions"
+          :key="opt.value"
+          type="button"
+          @click="setTheme(opt.value)"
+          class="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border text-sm font-medium transition-all duration-200"
+          :class="
+            theme === opt.value
+              ? 'border-[#7C5CFC] bg-[#EDE9FE] text-[#7C5CFC]'
+              : 'border-[#E2E8F0] text-[#64748B] hover:bg-[#F8FAFC] hover:border-[#C4B5FD]'
+          "
+          :aria-pressed="theme === opt.value"
+        >
+          <component :is="opt.icon" :size="20" />
+          {{ opt.label }}
+        </button>
+      </div>
+    </BaseCard>
 
     <!-- Perfil -->
     <BaseCard padding="md">
@@ -42,7 +92,12 @@ async function reseed() {
         <BaseInput id="nomePsi" model-value="Dra. Paula Silva" label="Nome completo" disabled />
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <BaseInput id="crpPsi" model-value="CRP 06/12345" label="CRP" disabled />
-          <BaseInput id="especialidade" model-value="Psicologia Clínica" label="Especialidade" disabled />
+          <BaseInput
+            id="especialidade"
+            model-value="Psicologia Clínica"
+            label="Especialidade"
+            disabled
+          />
         </div>
         <p class="text-xs text-[#64748B] bg-[#F8FAFC] p-3 rounded-lg">
           Edição de perfil será disponibilizada em uma versão futura do sistema.
@@ -72,7 +127,10 @@ async function reseed() {
           hint="Configure VITE_GEMINI_API_KEY no arquivo .env para persistir"
         />
         <div class="p-3 bg-[#FEF3C7] rounded-lg text-xs text-[#92400E]">
-          <strong>Nota de segurança:</strong> A chave inserida aqui é salva apenas na sessão atual. Para uso permanente, adicione ao arquivo <code class="bg-[#FDE68A] px-1 rounded">.env</code> como <code class="bg-[#FDE68A] px-1 rounded">VITE_GEMINI_API_KEY=sua_chave</code>
+          <strong>Nota de segurança:</strong> A chave inserida aqui é salva apenas na sessão atual.
+          Para uso permanente, adicione ao arquivo
+          <code class="bg-[#FDE68A] px-1 rounded">.env</code> como
+          <code class="bg-[#FDE68A] px-1 rounded">VITE_GEMINI_API_KEY=sua_chave</code>
         </div>
       </div>
     </BaseCard>
@@ -85,7 +143,9 @@ async function reseed() {
         </div>
         <div>
           <h2 class="text-base font-semibold text-[#1E293B]">Banco de dados local</h2>
-          <p class="text-xs text-[#64748B]">Os dados são armazenados no IndexedDB do seu navegador</p>
+          <p class="text-xs text-[#64748B]">
+            Os dados são armazenados no IndexedDB do seu navegador
+          </p>
         </div>
       </div>
 
@@ -94,13 +154,19 @@ async function reseed() {
           <BaseButton variant="outline" size="sm" :loading="seeding" @click="reseed" class="flex-1">
             <RefreshCw :size="14" /> Recriar dados de exemplo
           </BaseButton>
-          <BaseButton variant="danger" size="sm" :loading="resetting" @click="resetDB" class="flex-1">
+          <BaseButton
+            variant="danger"
+            size="sm"
+            :loading="resetting"
+            @click="resetDB"
+            class="flex-1"
+          >
             <Trash2 :size="14" /> Apagar todos os dados
           </BaseButton>
         </div>
         <p class="text-xs text-[#94A3B8]">
-          Os dados são armazenados localmente no navegador e não são enviados para servidores externos.
-          Limpar o cache do navegador apagará todos os dados.
+          Os dados são armazenados localmente no navegador e não são enviados para servidores
+          externos. Limpar o cache do navegador apagará todos os dados.
         </p>
       </div>
     </BaseCard>
@@ -113,10 +179,13 @@ async function reseed() {
         </div>
         <h3 class="text-base font-bold text-[#1E293B]">Clínica Psi</h3>
         <p class="text-sm text-[#64748B]">Sistema de Gestão Psicológica</p>
-        <p class="text-xs text-[#94A3B8]">v1.0.0 · Trabalho acadêmico — Composição e Projeto Gráfico</p>
-        <p class="text-xs text-[#94A3B8]">Desenvolvido com Vue 3 + TypeScript + Tailwind CSS + IndexedDB</p>
+        <p class="text-xs text-[#94A3B8]">
+          v1.0.0 · Trabalho acadêmico — Composição e Projeto Gráfico
+        </p>
+        <p class="text-xs text-[#94A3B8]">
+          Desenvolvido com Vue 3 + TypeScript + Tailwind CSS + IndexedDB
+        </p>
       </div>
     </BaseCard>
-
   </div>
 </template>

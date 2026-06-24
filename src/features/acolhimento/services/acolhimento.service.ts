@@ -20,7 +20,10 @@ export const acolhimentoService = {
     return db.acolhimentos.add({ ...data, createdAt: now, updatedAt: now })
   },
 
-  async update(id: number, data: Partial<AcolhimentoFormData> & { resumoIA?: string }): Promise<void> {
+  async update(
+    id: number,
+    data: Partial<AcolhimentoFormData> & { resumoIA?: string },
+  ): Promise<void> {
     const now = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")
     await db.acolhimentos.update(id, { ...data, updatedAt: now })
   },

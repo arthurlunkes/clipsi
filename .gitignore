@@ -26,6 +26,10 @@ coverage
 
 *.tsbuildinfo
 
+# Artefatos JS emitidos pelo TypeScript/vue-tsc ao lado dos fontes
+src/**/*.js
+src/**/*.vue.js
+
 .eslintcache
 
 # Cypress
@@ -37,3 +41,7 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Yarn (Plug'n'Play não é usado neste projeto)
+.yarn/*
+.pnp.*

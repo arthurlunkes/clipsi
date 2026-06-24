@@ -20,7 +20,10 @@ export const prontuarioService = {
     return db.prontuarios.add({ ...data, createdAt: now, updatedAt: now })
   },
 
-  async update(id: number, data: Partial<ProntuarioFormData> & { resumoIA?: string }): Promise<void> {
+  async update(
+    id: number,
+    data: Partial<ProntuarioFormData> & { resumoIA?: string },
+  ): Promise<void> {
     const now = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")
     await db.prontuarios.update(id, { ...data, updatedAt: now })
   },

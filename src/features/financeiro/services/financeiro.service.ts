@@ -33,16 +33,22 @@ export const financeiroService = {
 
   async getReceitaMensal(ano: number, mes: number): Promise<number> {
     const items = await this.getByMes(ano, mes)
-    return items.filter(i => i.tipo === 'receita' && i.status === 'pago').reduce((sum, i) => sum + i.valor, 0)
+    return items
+      .filter((i) => i.tipo === 'receita' && i.status === 'pago')
+      .reduce((sum, i) => sum + i.valor, 0)
   },
 
   async getDespesaMensal(ano: number, mes: number): Promise<number> {
     const items = await this.getByMes(ano, mes)
-    return items.filter(i => i.tipo === 'despesa' && i.status === 'pago').reduce((sum, i) => sum + i.valor, 0)
+    return items
+      .filter((i) => i.tipo === 'despesa' && i.status === 'pago')
+      .reduce((sum, i) => sum + i.valor, 0)
   },
 
   async getContasReceber(): Promise<number> {
     const all = await this.getAll()
-    return all.filter(i => i.tipo === 'receita' && i.status === 'pendente').reduce((sum, i) => sum + i.valor, 0)
+    return all
+      .filter((i) => i.tipo === 'receita' && i.status === 'pendente')
+      .reduce((sum, i) => sum + i.valor, 0)
   },
 }

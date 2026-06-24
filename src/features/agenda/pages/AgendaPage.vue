@@ -17,9 +17,21 @@ import BaseSelect from '@/shared/components/ui/BaseSelect.vue'
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue'
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue'
 import {
-  Plus, Pencil, Trash2, ChevronLeft, ChevronRight,
-  CalendarDays, CalendarRange, CalendarClock, Calendar as CalendarIcon,
-  List, Clock, CheckCircle2, User, Tag, DollarSign,
+  Plus,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  CalendarDays,
+  CalendarRange,
+  CalendarClock,
+  Calendar as CalendarIcon,
+  List,
+  Clock,
+  CheckCircle2,
+  User,
+  Tag,
+  DollarSign,
 } from 'lucide-vue-next'
 import { format, parseISO, isToday, startOfWeek, endOfWeek, isWithinInterval } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -33,7 +45,8 @@ const editingId = ref<number | null>(null)
 const selectedConsulta = ref<Consulta | null>(null)
 
 const calendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
-const initialView = typeof window !== 'undefined' && window.innerWidth < 768 ? 'listWeek' : 'timeGridWeek'
+const initialView =
+  typeof window !== 'undefined' && window.innerWidth < 768 ? 'listWeek' : 'timeGridWeek'
 const currentView = ref(initialView)
 const currentTitle = ref('')
 
@@ -59,18 +72,22 @@ const statusColors: Record<string, string> = {
   falta: '#F59E0B',
 }
 
-const events = computed(() => consultas.value.map(c => ({
-  id: String(c.id),
-  title: c.pacienteNome ?? c.titulo,
-  start: `${c.data}T${c.horaInicio}`,
-  end: `${c.data}T${c.horaFim}`,
-  backgroundColor: statusColors[c.status] ?? '#7C5CFC',
-  borderColor: 'transparent',
-  editable: c.status !== 'cancelada' && c.status !== 'realizada',
-  extendedProps: { consulta: c },
-})))
+const events = computed(() =>
+  consultas.value.map((c) => ({
+    id: String(c.id),
+    title: c.pacienteNome ?? c.titulo,
+    start: `${c.data}T${c.horaInicio}`,
+    end: `${c.data}T${c.horaFim}`,
+    backgroundColor: statusColors[c.status] ?? '#7C5CFC',
+    borderColor: 'transparent',
+    editable: c.status !== 'cancelada' && c.status !== 'realizada',
+    extendedProps: { consulta: c },
+  })),
+)
 
-const pacienteOptions = computed(() => pacientes.value.map(p => ({ label: p.nome, value: p.id! })))
+const pacienteOptions = computed(() =>
+  pacientes.value.map((p) => ({ label: p.nome, value: p.id! })),
+)
 
 const statusOptions = [
   { label: 'Agendada', value: 'agendada' },
@@ -106,10 +123,17 @@ const stats = computed(() => {
   const now = new Date()
   const start = startOfWeek(now, { weekStartsOn: 0 })
   const end = endOfWeek(now, { weekStartsOn: 0 })
-  let hoje = 0, semana = 0, confirmadas = 0, pendentes = 0
+  let hoje = 0,
+    semana = 0,
+    confirmadas = 0,
+    pendentes = 0
   for (const c of consultas.value) {
     let d: Date
-    try { d = parseISO(c.data) } catch { continue }
+    try {
+      d = parseISO(c.data)
+    } catch {
+      continue
+    }
     if (isToday(d)) hoje++
     if (isWithinInterval(d, { start, end })) {
       semana++
@@ -121,9 +145,27 @@ const stats = computed(() => {
 })
 
 const statCards = computed(() => [
-  { label: 'Consultas hoje', value: stats.value.hoje, icon: CalendarClock, from: '#8B5CF6', to: '#6366F1' },
-  { label: 'Esta semana', value: stats.value.semana, icon: CalendarDays, from: '#3B82F6', to: '#2563EB' },
-  { label: 'Confirmadas', value: stats.value.confirmadas, icon: CheckCircle2, from: '#22C55E', to: '#16A34A' },
+  {
+    label: 'Consultas hoje',
+    value: stats.value.hoje,
+    icon: CalendarClock,
+    from: '#8B5CF6',
+    to: '#6366F1',
+  },
+  {
+    label: 'Esta semana',
+    value: stats.value.semana,
+    icon: CalendarDays,
+    from: '#3B82F6',
+    to: '#2563EB',
+  },
+  {
+    label: 'Confirmadas',
+    value: stats.value.confirmadas,
+    icon: CheckCircle2,
+    from: '#22C55E',
+    to: '#16A34A',
+  },
   { label: 'Pendentes', value: stats.value.pendentes, icon: Clock, from: '#F59E0B', to: '#D97706' },
 ])
 
@@ -158,10 +200,18 @@ const calendarOptions = computed(() => ({
 function api() {
   return calendarRef.value?.getApi()
 }
-function goPrev() { api()?.prev() }
-function goNext() { api()?.next() }
-function goToday() { api()?.today() }
-function setView(v: string) { api()?.changeView(v) }
+function goPrev() {
+  api()?.prev()
+}
+function goNext() {
+  api()?.next()
+}
+function goToday() {
+  api()?.today()
+}
+function setView(v: string) {
+  api()?.changeView(v)
+}
 
 function handleDatesSet(arg: any) {
   currentTitle.value = arg.view.title
@@ -179,7 +229,10 @@ async function persistMove(info: any) {
   const c: Consulta = info.event.extendedProps.consulta
   const start: Date | null = info.event.start
   const end: Date | null = info.event.end
-  if (!c?.id || !start) { info.revert?.(); return }
+  if (!c?.id || !start) {
+    info.revert?.()
+    return
+  }
   try {
     await consultaService.update(c.id, {
       ...c,
@@ -263,8 +316,12 @@ async function save() {
   if (!validate()) return
   saving.value = true
   try {
-    const paciente = pacientes.value.find(p => p.id === Number(form.value.pacienteId))
-    const data = { ...form.value, pacienteId: Number(form.value.pacienteId), pacienteNome: paciente?.nome }
+    const paciente = pacientes.value.find((p) => p.id === Number(form.value.pacienteId))
+    const data = {
+      ...form.value,
+      pacienteId: Number(form.value.pacienteId),
+      pacienteNome: paciente?.nome,
+    }
 
     if (editingId.value) {
       await consultaService.update(editingId.value, data)
@@ -294,7 +351,11 @@ const statusMap: Record<string, { label: string; variant: any }> = {
 }
 
 function fmtDate(d: string) {
-  try { return format(parseISO(d), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) } catch { return d }
+  try {
+    return format(parseISO(d), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+  } catch {
+    return d
+  }
 }
 
 // ---- responsividade: alterna para Lista no mobile ----
@@ -318,7 +379,6 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
 
 <template>
   <div class="p-4 lg:p-6 max-w-7xl mx-auto space-y-4">
-
     <!-- Resumo -->
     <section class="grid grid-cols-2 lg:grid-cols-4 gap-3" aria-label="Resumo da agenda">
       <div
@@ -341,25 +401,43 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
     </section>
 
     <!-- Calendário -->
-    <div class="bg-white rounded-2xl border border-[#EEF0F7] shadow-(--shadow-card) overflow-hidden">
-
+    <div
+      class="bg-white rounded-2xl border border-[#EEF0F7] shadow-(--shadow-card) overflow-hidden"
+    >
       <!-- Toolbar custom -->
       <div class="flex flex-col gap-3 p-3 sm:p-4 lg:p-5 border-b border-[#EEF0F7]">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <!-- Navegação + título -->
           <div class="flex items-center gap-2.5 min-w-0">
-            <div class="inline-flex items-center rounded-xl border border-[#E2E8F0] bg-white overflow-hidden shadow-soft">
-              <button @click="goPrev" class="p-2 text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#7C5CFC] transition-colors" aria-label="Anterior">
+            <div
+              class="inline-flex items-center rounded-xl border border-[#E2E8F0] bg-white overflow-hidden shadow-soft"
+            >
+              <button
+                @click="goPrev"
+                class="p-2 text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#7C5CFC] transition-colors"
+                aria-label="Anterior"
+              >
                 <ChevronLeft :size="18" />
               </button>
-              <button @click="goToday" class="px-3 py-2 text-sm font-semibold text-[#1E293B] border-x border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors">
+              <button
+                @click="goToday"
+                class="px-3 py-2 text-sm font-semibold text-[#1E293B] border-x border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors"
+              >
                 Hoje
               </button>
-              <button @click="goNext" class="p-2 text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#7C5CFC] transition-colors" aria-label="Próximo">
+              <button
+                @click="goNext"
+                class="p-2 text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#7C5CFC] transition-colors"
+                aria-label="Próximo"
+              >
                 <ChevronRight :size="18" />
               </button>
             </div>
-            <h2 class="text-base lg:text-lg font-bold text-[#1E293B] font-display capitalize truncate">{{ currentTitle }}</h2>
+            <h2
+              class="text-base lg:text-lg font-bold text-[#1E293B] font-display capitalize truncate"
+            >
+              {{ currentTitle }}
+            </h2>
           </div>
 
           <!-- Switcher + ação -->
@@ -370,9 +448,11 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
                 :key="v.value"
                 @click="setView(v.value)"
                 class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200"
-                :class="currentView === v.value
-                  ? 'bg-white text-[#7C5CFC] shadow-soft'
-                  : 'text-[#64748B] hover:text-[#1E293B]'"
+                :class="
+                  currentView === v.value
+                    ? 'bg-white text-[#7C5CFC] shadow-soft'
+                    : 'text-[#64748B] hover:text-[#1E293B]'
+                "
                 :aria-pressed="currentView === v.value"
               >
                 <component :is="v.icon" :size="15" />
@@ -388,8 +468,16 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
         <!-- Legenda -->
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
           <span class="text-xs font-medium text-[#94A3B8]">Legenda:</span>
-          <span v-for="l in legend" :key="l.label" class="inline-flex items-center gap-1.5 text-xs text-[#64748B]">
-            <span class="w-2.5 h-2.5 rounded-full" :style="{ backgroundColor: l.color }" aria-hidden="true" />
+          <span
+            v-for="l in legend"
+            :key="l.label"
+            class="inline-flex items-center gap-1.5 text-xs text-[#64748B]"
+          >
+            <span
+              class="w-2.5 h-2.5 rounded-full"
+              :style="{ backgroundColor: l.color }"
+              aria-hidden="true"
+            />
             {{ l.label }}
           </span>
         </div>
@@ -400,7 +488,11 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
         <FullCalendar ref="calendarRef" :options="calendarOptions">
           <template #eventContent="arg">
             <div class="flex items-center gap-1 w-full overflow-hidden leading-tight">
-              <span v-if="arg.timeText" class="text-[11px] font-bold opacity-90 whitespace-nowrap">{{ arg.timeText }}</span>
+              <span
+                v-if="arg.timeText"
+                class="text-[11px] font-bold opacity-90 whitespace-nowrap"
+                >{{ arg.timeText }}</span
+              >
               <span class="text-[11px] font-medium truncate">{{ arg.event.title }}</span>
             </div>
           </template>
@@ -409,11 +501,18 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
     </div>
 
     <!-- Detail modal -->
-    <BaseModal :open="showDetail" title="Detalhes da consulta" size="md" @close="showDetail = false">
+    <BaseModal
+      :open="showDetail"
+      title="Detalhes da consulta"
+      size="md"
+      @close="showDetail = false"
+    >
       <div v-if="selectedConsulta" class="space-y-4">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
-            <h3 class="text-base font-semibold text-[#1E293B] truncate">{{ selectedConsulta.titulo }}</h3>
+            <h3 class="text-base font-semibold text-[#1E293B] truncate">
+              {{ selectedConsulta.titulo }}
+            </h3>
             <p class="text-sm text-[#64748B] flex items-center gap-1.5 mt-0.5">
               <User :size="14" /> {{ selectedConsulta.pacienteNome }}
             </p>
@@ -425,24 +524,47 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
 
         <div class="grid grid-cols-2 gap-3 text-sm">
           <div class="bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]">
-            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1"><CalendarIcon :size="12" /> Data</p>
+            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1">
+              <CalendarIcon :size="12" /> Data
+            </p>
             <p class="font-semibold text-[#1E293B]">{{ fmtDate(selectedConsulta.data) }}</p>
           </div>
           <div class="bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]">
-            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1"><Clock :size="12" /> Horário</p>
-            <p class="font-semibold text-[#1E293B]">{{ selectedConsulta.horaInicio }} – {{ selectedConsulta.horaFim }}</p>
+            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1">
+              <Clock :size="12" /> Horário
+            </p>
+            <p class="font-semibold text-[#1E293B]">
+              {{ selectedConsulta.horaInicio }} – {{ selectedConsulta.horaFim }}
+            </p>
           </div>
           <div class="bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]">
-            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1"><Tag :size="12" /> Tipo</p>
+            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1">
+              <Tag :size="12" /> Tipo
+            </p>
             <p class="font-semibold text-[#1E293B] capitalize">{{ selectedConsulta.tipo }}</p>
           </div>
-          <div v-if="selectedConsulta.valor" class="bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]">
-            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1"><DollarSign :size="12" /> Valor</p>
-            <p class="font-semibold text-[#1E293B]">{{ selectedConsulta.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</p>
+          <div
+            v-if="selectedConsulta.valor"
+            class="bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]"
+          >
+            <p class="text-xs text-[#94A3B8] mb-1 flex items-center gap-1">
+              <DollarSign :size="12" /> Valor
+            </p>
+            <p class="font-semibold text-[#1E293B]">
+              {{
+                selectedConsulta.valor.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                })
+              }}
+            </p>
           </div>
         </div>
 
-        <div v-if="selectedConsulta.observacoes" class="text-sm text-[#64748B] bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]">
+        <div
+          v-if="selectedConsulta.observacoes"
+          class="text-sm text-[#64748B] bg-[#F8FAFC] p-3 rounded-xl border border-[#EEF0F7]"
+        >
           {{ selectedConsulta.observacoes }}
         </div>
       </div>
@@ -460,7 +582,12 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
     </BaseModal>
 
     <!-- Form modal -->
-    <BaseModal :open="showModal" :title="editingId ? 'Editar consulta' : 'Nova consulta'" size="lg" @close="showModal = false">
+    <BaseModal
+      :open="showModal"
+      :title="editingId ? 'Editar consulta' : 'Nova consulta'"
+      size="lg"
+      @close="showModal = false"
+    >
       <form @submit.prevent="save" class="space-y-4" novalidate>
         <BaseSelect
           id="pacienteId"
@@ -472,12 +599,38 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
           required
         />
 
-        <BaseInput id="titulo" v-model="form.titulo" label="Título" placeholder="Ex: Sessão de psicoterapia" />
+        <BaseInput
+          id="titulo"
+          v-model="form.titulo"
+          label="Título"
+          placeholder="Ex: Sessão de psicoterapia"
+        />
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <BaseInput id="data" v-model="form.data" type="date" label="Data" :error="errors.data" required />
-          <BaseInput id="horaInicio" v-model="form.horaInicio" type="time" label="Hora início" :error="errors.horaInicio" required />
-          <BaseInput id="horaFim" v-model="form.horaFim" type="time" label="Hora fim" :error="errors.horaFim" required />
+          <BaseInput
+            id="data"
+            v-model="form.data"
+            type="date"
+            label="Data"
+            :error="errors.data"
+            required
+          />
+          <BaseInput
+            id="horaInicio"
+            v-model="form.horaInicio"
+            type="time"
+            label="Hora início"
+            :error="errors.horaInicio"
+            required
+          />
+          <BaseInput
+            id="horaFim"
+            v-model="form.horaFim"
+            type="time"
+            label="Hora fim"
+            :error="errors.horaFim"
+            required
+          />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -498,6 +651,5 @@ onBeforeUnmount(() => mql?.removeEventListener('change', onMqChange))
         </div>
       </template>
     </BaseModal>
-
   </div>
 </template>

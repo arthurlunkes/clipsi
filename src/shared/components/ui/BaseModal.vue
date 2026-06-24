@@ -8,7 +8,7 @@ interface Props {
   size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
@@ -45,7 +45,10 @@ onUnmounted(() => document.removeEventListener('keydown', handleKey))
           class="relative bg-white rounded-xl shadow-2xl w-full flex flex-col max-h-[90vh]"
           :class="sizeClasses[size]"
         >
-          <div v-if="title || $slots.header" class="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0]">
+          <div
+            v-if="title || $slots.header"
+            class="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0]"
+          >
             <slot name="header">
               <h2 class="text-lg font-semibold text-[#1E293B]">{{ title }}</h2>
             </slot>
@@ -72,13 +75,16 @@ onUnmounted(() => document.removeEventListener('keydown', handleKey))
 </template>
 
 <style scoped>
-.modal-enter-active, .modal-leave-active {
+.modal-enter-active,
+.modal-leave-active {
   transition: opacity 0.2s ease;
 }
-.modal-enter-active .relative, .modal-leave-active .relative {
+.modal-enter-active .relative,
+.modal-leave-active .relative {
   transition: transform 0.2s ease;
 }
-.modal-enter-from, .modal-leave-to {
+.modal-enter-from,
+.modal-leave-to {
   opacity: 0;
 }
 .modal-enter-from .relative {

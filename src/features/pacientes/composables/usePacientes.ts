@@ -13,10 +13,9 @@ export function usePacientes() {
   const filtered = computed(() => {
     if (!search.value) return pacientes.value
     const q = search.value.toLowerCase()
-    return pacientes.value.filter(p =>
-      p.nome.toLowerCase().includes(q) ||
-      p.cpf.includes(q) ||
-      p.email.toLowerCase().includes(q)
+    return pacientes.value.filter(
+      (p) =>
+        p.nome.toLowerCase().includes(q) || p.cpf.includes(q) || p.email.toLowerCase().includes(q),
     )
   })
 
@@ -27,7 +26,9 @@ export function usePacientes() {
     return filtered.value.slice(start, start + PER_PAGE)
   })
 
-  watch(search, () => { currentPage.value = 1 })
+  watch(search, () => {
+    currentPage.value = 1
+  })
 
   async function load() {
     loading.value = true
@@ -40,7 +41,7 @@ export function usePacientes() {
 
   async function remove(id: number) {
     await pacienteService.remove(id)
-    pacientes.value = pacientes.value.filter(p => p.id !== id)
+    pacientes.value = pacientes.value.filter((p) => p.id !== id)
   }
 
   load()

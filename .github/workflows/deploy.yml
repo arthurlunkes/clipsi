@@ -1,0 +1,167 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancela execuções antigas do mesmo branch/PR quando um novo push chega.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+  # Habilita logs coloridos nas ferramentas que respeitam FORCE_COLOR.
+  FORCE_COLOR: '3'
+
+jobs:
+  # ----------------------------------------------------------------
+  # Qualidade: lint + formatação + tipos + build (roda em PR e push)
+  # ----------------------------------------------------------------
+  quality:
+    name: Qualidade & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Instalar dependências (Yarn)
+        run: |
+          printf '\033[1;34m==> Habilitando corepack/yarn\033[0m\n'
+          corepack enable
+          printf '\033[1;34m==> yarn install --immutable\033[0m\n'
+          yarn install --immutable
+
+      - name: 🎨 Prettier (verificação de formatação)
+        run: |
+          echo "::group::prettier --check src/"
+          yarn format:check
+          echo "::endgroup::"
+
+      - name: 🔎 ESLint
+        run: |
+          echo "::group::eslint ."
+          yarn lint:check
+          echo "::endgroup::"
+
+      - name: 🧪 Type-check (vue-tsc)
+        run: |
+          echo "::group::vue-tsc --build"
+          yarn type-check
+          echo "::endgroup::"
+
+      - name: 🏗️ Build de produção
+        run: |
+          echo "::group::vite build"
+          yarn build-only
+          echo "::endgroup::"
+          printf '\033[1;32m==> Build concluído\033[0m\n'
+
+      - name: ⬆️ Publicar artefato (dist)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+          if-no-files-found: error
+
+  # ----------------------------------------------------------------
+  # Deploy: envia o dist/ para o servidor via SSH (somente push main)
+  # ----------------------------------------------------------------
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+    needs: quality
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: ${{ vars.DEPLOY_URL }}
+    steps:
+      - name: 📥 Checkout (para a config do nginx)
+        uses: actions/checkout@v4
+
+      - name: ⬇️ Baixar artefato (dist)
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: 🔐 Configurar chave SSH
+        run: |
+          printf '\033[1;34m==> Preparando credenciais SSH\033[0m\n'
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+        env:
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+
+      - name: 🚀 Enviar arquivos (rsync) e recarregar nginx
+        run: |
+          set -euo pipefail
+
+          BLUE='\033[1;34m'; GREEN='\033[1;32m'; YELLOW='\033[1;33m'; RESET='\033[0m'
+          log() { printf "${BLUE}==> %s${RESET}\n" "$1"; }
+          ok()  { printf "${GREEN}✔ %s${RESET}\n" "$1"; }
+
+          SSH_PORT="${SSH_PORT:-22}"
+          DEPLOY_PATH="${DEPLOY_PATH:-/var/www/clipsi}"
+          SSH_OPTS="-i ~/.ssh/deploy_key -p ${SSH_PORT} -o StrictHostKeyChecking=yes"
+
+          echo "::group::rsync dist/ -> ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}"
+          log "Sincronizando build estático para o servidor"
+          rsync -az --delete --human-readable \
+            -e "ssh ${SSH_OPTS}" \
+            dist/ "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+          ok "Arquivos sincronizados"
+          echo "::endgroup::"
+
+          echo "::group::Instalar config do nginx (se ausente)"
+          NGINX_CONF="clipsi.arthurlunkes.com.br.conf"
+          log "Garantindo configuração do nginx no servidor"
+          rsync -az -e "ssh ${SSH_OPTS}" \
+            "deploy/nginx/${NGINX_CONF}" \
+            "${SSH_USER}@${SSH_HOST}:/tmp/${NGINX_CONF}"
+          ssh ${SSH_OPTS} "${SSH_USER}@${SSH_HOST}" bash -s <<EOF
+            set -e
+            AVAIL="/etc/nginx/sites-available/${NGINX_CONF}"
+            ENABLED="/etc/nginx/sites-enabled/${NGINX_CONF}"
+            if [ ! -f "\$AVAIL" ]; then
+              echo "Config não encontrada — instalando..."
+              sudo install -m 0644 "/tmp/${NGINX_CONF}" "\$AVAIL"
+              sudo ln -sfn "\$AVAIL" "\$ENABLED"
+              sudo rm -f /etc/nginx/sites-enabled/default
+            else
+              echo "Config já existe — mantendo a versão do servidor."
+            fi
+            rm -f "/tmp/${NGINX_CONF}"
+          EOF
+          ok "Config do nginx garantida"
+          echo "::endgroup::"
+
+          echo "::group::nginx reload"
+          log "Validando e recarregando nginx"
+          ssh ${SSH_OPTS} "${SSH_USER}@${SSH_HOST}" 'sudo nginx -t && sudo systemctl reload nginx'
+          ok "nginx recarregado"
+          echo "::endgroup::"
+
+          printf "${GREEN}==> Deploy concluído com sucesso${RESET}\n"
+        env:
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+
+      - name: 🧹 Limpar chave SSH
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

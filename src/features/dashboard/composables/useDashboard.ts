@@ -39,7 +39,12 @@ export function useDashboard() {
         pacienteService.getRecentes(5),
       ])
 
-      stats.value = { pacientesAtivos: ativos, consultasHoje: hoje, receitaMes: receita, emEspera: espera }
+      stats.value = {
+        pacientesAtivos: ativos,
+        consultasHoje: hoje,
+        receitaMes: receita,
+        emEspera: espera,
+      }
       proximasConsultas.value = proximas
       pacientesRecentes.value = recentes
 
@@ -54,7 +59,7 @@ export function useDashboard() {
         const m = getMonth(d) + 1
         meses.push(format(d, 'MMM', { locale: ptBR }))
         const consultas = await consultaService.getByMes(a, m)
-        atendimentos.push(consultas.filter(c => c.status === 'realizada').length)
+        atendimentos.push(consultas.filter((c) => c.status === 'realizada').length)
         receitas.push(await financeiroService.getReceitaMensal(a, m))
         despesas.push(await financeiroService.getDespesaMensal(a, m))
       }
@@ -70,5 +75,14 @@ export function useDashboard() {
 
   onMounted(load)
 
-  return { loading, stats, proximasConsultas, pacientesRecentes, chartAtendimentos, chartLabels, chartReceitas, chartDespesas }
+  return {
+    loading,
+    stats,
+    proximasConsultas,
+    pacientesRecentes,
+    chartAtendimentos,
+    chartLabels,
+    chartReceitas,
+    chartDespesas,
+  }
 }

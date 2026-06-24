@@ -28,14 +28,22 @@ const pages = computed(() => {
   return range
 })
 
-const from = computed(() => props.itemsPerPage ? (props.currentPage - 1) * props.itemsPerPage + 1 : undefined)
-const to = computed(() => props.itemsPerPage && props.totalItems ? Math.min(props.currentPage * props.itemsPerPage, props.totalItems) : undefined)
+const from = computed(() =>
+  props.itemsPerPage ? (props.currentPage - 1) * props.itemsPerPage + 1 : undefined,
+)
+const to = computed(() =>
+  props.itemsPerPage && props.totalItems
+    ? Math.min(props.currentPage * props.itemsPerPage, props.totalItems)
+    : undefined,
+)
 </script>
 
 <template>
   <div class="flex items-center justify-between gap-4" role="navigation" aria-label="Paginação">
     <p v-if="totalItems && from && to" class="text-sm text-[#64748B]">
-      Exibindo <span class="font-medium text-[#1E293B]">{{ from }}</span> a <span class="font-medium text-[#1E293B]">{{ to }}</span> de <span class="font-medium text-[#1E293B]">{{ totalItems }}</span>
+      Exibindo <span class="font-medium text-[#1E293B]">{{ from }}</span> a
+      <span class="font-medium text-[#1E293B]">{{ to }}</span> de
+      <span class="font-medium text-[#1E293B]">{{ totalItems }}</span>
     </p>
 
     <div class="flex items-center gap-1">
@@ -54,7 +62,9 @@ const to = computed(() => props.itemsPerPage && props.totalItems ? Math.min(prop
           v-else
           @click="emit('update:currentPage', page)"
           class="min-w-[36px] h-9 px-2 rounded-lg text-sm font-medium transition-colors"
-          :class="page === currentPage ? 'bg-[#7C5CFC] text-white' : 'text-[#64748B] hover:bg-[#F1F5F9]'"
+          :class="
+            page === currentPage ? 'bg-[#7C5CFC] text-white' : 'text-[#64748B] hover:bg-[#F1F5F9]'
+          "
           :aria-current="page === currentPage ? 'page' : undefined"
           :aria-label="`Página ${page}`"
         >

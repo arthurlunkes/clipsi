@@ -6,9 +6,13 @@ export const filaService = {
   async getHoje(): Promise<FilaEspera[]> {
     const hoje = format(new Date(), 'yyyy-MM-dd')
     return db.filaEspera
-      .filter(f => f.createdAt.startsWith(hoje))
+      .filter((f) => f.createdAt.startsWith(hoje))
       .toArray()
-      .then(items => items.sort((a, b) => a.prioridade - b.prioridade || a.horaChegada.localeCompare(b.horaChegada)))
+      .then((items) =>
+        items.sort(
+          (a, b) => a.prioridade - b.prioridade || a.horaChegada.localeCompare(b.horaChegada),
+        ),
+      )
   },
 
   async getById(id: number): Promise<FilaEspera | undefined> {
@@ -42,7 +46,7 @@ export const filaService = {
   async countAguardando(): Promise<number> {
     const hoje = format(new Date(), 'yyyy-MM-dd')
     return db.filaEspera
-      .filter(f => f.createdAt.startsWith(hoje) && f.status === 'aguardando')
+      .filter((f) => f.createdAt.startsWith(hoje) && f.status === 'aguardando')
       .count()
   },
 }

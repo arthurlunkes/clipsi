@@ -14,7 +14,12 @@ export const pacienteService = {
   async search(query: string): Promise<Paciente[]> {
     const lower = query.toLowerCase()
     return db.pacientes
-      .filter(p => p.nome.toLowerCase().includes(lower) || p.cpf.includes(query) || p.email.toLowerCase().includes(lower))
+      .filter(
+        (p) =>
+          p.nome.toLowerCase().includes(lower) ||
+          p.cpf.includes(query) ||
+          p.email.toLowerCase().includes(lower),
+      )
       .toArray()
   },
 

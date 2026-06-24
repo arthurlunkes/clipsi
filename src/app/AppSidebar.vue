@@ -1,30 +1,24 @@
 <script setup lang="ts">
 import { onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  LayoutDashboard, Users, Calendar, Heart, FileText,
-  DollarSign, BarChart3, Clock, Settings, BrainCircuit, X,
-  ChevronsLeft,
-} from 'lucide-vue-next'
+import { BrainCircuit, X, ChevronsLeft } from 'lucide-vue-next'
 import { useLayout } from '@/shared/composables/useLayout'
+import { NAV_ITEMS, CONFIG_NAV_ITEM, APP_NAME } from '@/router/routes'
 
 const route = useRoute()
 
 const {
-  sidebarOpen, sidebarCollapsed, isResizing, isDesktop, collapsed, shellWidth,
-  closeSidebar, toggleCollapsed, setSidebarWidth, resetSidebarWidth,
+  sidebarOpen,
+  sidebarCollapsed,
+  isResizing,
+  isDesktop,
+  collapsed,
+  shellWidth,
+  closeSidebar,
+  toggleCollapsed,
+  setSidebarWidth,
+  resetSidebarWidth,
 } = useLayout()
-
-const navItems = [
-  { label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
-  { label: 'Pacientes', icon: Users, to: '/pacientes' },
-  { label: 'Agenda', icon: Calendar, to: '/agenda' },
-  { label: 'Acolhimento', icon: Heart, to: '/acolhimento' },
-  { label: 'Prontuários', icon: FileText, to: '/prontuarios' },
-  { label: 'Financeiro', icon: DollarSign, to: '/financeiro' },
-  { label: 'Relatórios', icon: BarChart3, to: '/relatorios' },
-  { label: 'Fila de Espera', icon: Clock, to: '/fila-espera' },
-]
 
 const isActive = (to: string) => route.path === to || route.path.startsWith(to + '/')
 
@@ -83,11 +77,13 @@ onBeforeUnmount(stopResize)
       :class="collapsed ? 'justify-center' : 'justify-between'"
     >
       <div class="flex items-center gap-2.5 overflow-hidden">
-        <div class="w-9 h-9 gradient-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-primary">
+        <div
+          class="w-9 h-9 gradient-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-primary"
+        >
           <BrainCircuit :size="19" class="text-white" />
         </div>
         <div v-if="!collapsed" class="whitespace-nowrap">
-          <p class="text-sm font-bold text-[#1E293B] leading-tight font-display">Clínica Psi</p>
+          <p class="text-sm font-bold text-[#1E293B] leading-tight font-display">{{ APP_NAME }}</p>
           <p class="text-xs text-[#64748B]">Gestão Psicológica</p>
         </div>
       </div>
@@ -104,7 +100,7 @@ onBeforeUnmount(stopResize)
     <!-- Nav -->
     <nav class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-1">
       <RouterLink
-        v-for="item in navItems"
+        v-for="item in NAV_ITEMS"
         :key="item.to"
         :to="item.to"
         :title="collapsed ? item.label : undefined"
@@ -130,23 +126,28 @@ onBeforeUnmount(stopResize)
     <!-- Footer -->
     <div class="p-3 border-t border-[#E7E9F2]/70 flex-shrink-0 space-y-1">
       <RouterLink
-        to="/configuracoes"
-        :title="collapsed ? 'Configurações' : undefined"
+        :to="CONFIG_NAV_ITEM.to"
+        :title="collapsed ? CONFIG_NAV_ITEM.label : undefined"
         class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group"
         :class="[
           collapsed ? 'justify-center' : '',
-          route.path === '/configuracoes'
+          route.path === CONFIG_NAV_ITEM.to
             ? 'gradient-primary text-white shadow-primary'
             : 'text-[#64748B] hover:bg-white/70 hover:text-[#1E293B]',
         ]"
         @click="closeSidebar"
       >
-        <Settings
+        <component
+          :is="CONFIG_NAV_ITEM.icon"
           :size="18"
           class="flex-shrink-0 transition-transform duration-200 group-hover:rotate-45"
-          :class="route.path === '/configuracoes' ? 'text-white' : 'text-[#94A3B8] group-hover:text-[#7C5CFC]'"
+          :class="
+            route.path === CONFIG_NAV_ITEM.to
+              ? 'text-white'
+              : 'text-[#94A3B8] group-hover:text-[#7C5CFC]'
+          "
         />
-        <span v-if="!collapsed" class="whitespace-nowrap">Configurações</span>
+        <span v-if="!collapsed" class="whitespace-nowrap">{{ CONFIG_NAV_ITEM.label }}</span>
       </RouterLink>
 
       <!-- Recolher / expandir (desktop) -->

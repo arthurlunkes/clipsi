@@ -1,6 +1,6 @@
 import { db } from '@/infrastructure/database/db'
 import type { Consulta, ConsultaFormData } from '../types'
-import { format, startOfDay, endOfDay } from 'date-fns'
+import { format } from 'date-fns'
 
 export const consultaService = {
   async getAll(): Promise<Consulta[]> {
@@ -25,7 +25,7 @@ export const consultaService = {
     return db.consultas
       .where('data')
       .aboveOrEqual(agora)
-      .filter(c => c.status !== 'cancelada')
+      .filter((c) => c.status !== 'cancelada')
       .limit(limit)
       .toArray()
   },

@@ -9,7 +9,7 @@ import BaseCard from '@/shared/components/ui/BaseCard.vue'
 import BaseButton from '@/shared/components/ui/BaseButton.vue'
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue'
 import SkeletonLoader from '@/shared/components/ui/SkeletonLoader.vue'
-import { ArrowLeft, Pencil, Phone, Mail, MapPin, Calendar, FileText, Users } from 'lucide-vue-next'
+import { ArrowLeft, Pencil, Phone, Mail, MapPin, Calendar, FileText } from 'lucide-vue-next'
 import { format, parseISO, differenceInYears } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -35,10 +35,18 @@ onMounted(async () => {
 })
 
 function age(d: string) {
-  try { return differenceInYears(new Date(), parseISO(d)) } catch { return '-' }
+  try {
+    return differenceInYears(new Date(), parseISO(d))
+  } catch {
+    return '-'
+  }
 }
 function fmt(d: string) {
-  try { return format(parseISO(d), "dd/MM/yyyy", { locale: ptBR }) } catch { return d }
+  try {
+    return format(parseISO(d), 'dd/MM/yyyy', { locale: ptBR })
+  } catch {
+    return d
+  }
 }
 
 const statusMap: Record<string, { label: string; variant: any }> = {
@@ -52,10 +60,13 @@ const statusMap: Record<string, { label: string; variant: any }> = {
 
 <template>
   <div class="p-4 lg:p-6 max-w-4xl mx-auto space-y-5">
-
     <!-- Header -->
     <div class="flex items-center gap-3">
-      <button @click="router.back()" class="p-2 rounded-lg text-[#64748B] hover:bg-[#F1F5F9] transition-colors" aria-label="Voltar">
+      <button
+        @click="router.back()"
+        class="p-2 rounded-lg text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
+        aria-label="Voltar"
+      >
         <ArrowLeft :size="20" />
       </button>
     </div>
@@ -68,22 +79,36 @@ const statusMap: Record<string, { label: string; variant: any }> = {
       <!-- Profile card -->
       <BaseCard padding="md">
         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0">
+          <div
+            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0"
+          >
             <span class="text-xl font-bold text-white">
-              {{ paciente.nome.split(' ').map(n => n[0]).slice(0, 2).join('') }}
+              {{
+                paciente.nome
+                  .split(' ')
+                  .map((n) => n[0])
+                  .slice(0, 2)
+                  .join('')
+              }}
             </span>
           </div>
           <div class="flex-1">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h1 class="text-xl font-bold text-[#1E293B]">{{ paciente.nome }}</h1>
-                <p class="text-sm text-[#64748B]">{{ age(paciente.dataNascimento) }} anos · CPF: {{ paciente.cpf }}</p>
+                <p class="text-sm text-[#64748B]">
+                  {{ age(paciente.dataNascimento) }} anos · CPF: {{ paciente.cpf }}
+                </p>
               </div>
               <div class="flex gap-2">
                 <BaseBadge :variant="paciente.ativo ? 'success' : 'neutral'" dot>
                   {{ paciente.ativo ? 'Ativo' : 'Inativo' }}
                 </BaseBadge>
-                <BaseButton size="sm" variant="outline" @click="router.push(`/pacientes/${id}/editar`)">
+                <BaseButton
+                  size="sm"
+                  variant="outline"
+                  @click="router.push(`/pacientes/${id}/editar`)"
+                >
                   <Pencil :size="14" /> Editar
                 </BaseButton>
               </div>
@@ -104,7 +129,10 @@ const statusMap: Record<string, { label: string; variant: any }> = {
               </div>
             </div>
 
-            <div v-if="paciente.observacoes" class="mt-3 p-3 bg-[#F8FAFC] rounded-lg text-sm text-[#64748B]">
+            <div
+              v-if="paciente.observacoes"
+              class="mt-3 p-3 bg-[#F8FAFC] rounded-lg text-sm text-[#64748B]"
+            >
               {{ paciente.observacoes }}
             </div>
           </div>
@@ -123,7 +151,7 @@ const statusMap: Record<string, { label: string; variant: any }> = {
         </BaseCard>
         <BaseCard padding="sm" class="text-center">
           <p class="text-2xl font-bold text-[#7C5CFC]">
-            {{ consultas.filter(c => c.status === 'realizada').length }}
+            {{ consultas.filter((c) => c.status === 'realizada').length }}
           </p>
           <p class="text-xs text-[#64748B] mt-0.5">Realizadas</p>
         </BaseCard>
@@ -135,16 +163,24 @@ const statusMap: Record<string, { label: string; variant: any }> = {
           <h2 class="text-base font-semibold text-[#1E293B] flex items-center gap-2">
             <Calendar :size="16" class="text-[#7C5CFC]" /> Consultas recentes
           </h2>
-          <RouterLink to="/agenda" class="text-sm text-[#7C5CFC] hover:underline">Ver agenda</RouterLink>
+          <RouterLink to="/agenda" class="text-sm text-[#7C5CFC] hover:underline"
+            >Ver agenda</RouterLink
+          >
         </div>
         <div v-if="consultas.length === 0" class="px-6 py-8 text-center text-sm text-[#64748B]">
           Nenhuma consulta registrada
         </div>
         <ul v-else class="divide-y divide-[#F8FAFC]">
-          <li v-for="c in consultas" :key="c.id" class="flex items-center justify-between px-6 py-3">
+          <li
+            v-for="c in consultas"
+            :key="c.id"
+            class="flex items-center justify-between px-6 py-3"
+          >
             <div>
               <p class="text-sm font-medium text-[#1E293B]">{{ c.titulo }}</p>
-              <p class="text-xs text-[#64748B]">{{ fmt(c.data) }} · {{ c.horaInicio }}–{{ c.horaFim }}</p>
+              <p class="text-xs text-[#64748B]">
+                {{ fmt(c.data) }} · {{ c.horaInicio }}–{{ c.horaFim }}
+              </p>
             </div>
             <BaseBadge :variant="statusMap[c.status]?.variant ?? 'neutral'" size="sm">
               {{ statusMap[c.status]?.label }}
@@ -159,7 +195,9 @@ const statusMap: Record<string, { label: string; variant: any }> = {
           <h2 class="text-base font-semibold text-[#1E293B] flex items-center gap-2">
             <FileText :size="16" class="text-[#7C5CFC]" /> Prontuário
           </h2>
-          <RouterLink to="/prontuarios" class="text-sm text-[#7C5CFC] hover:underline">Ver todos</RouterLink>
+          <RouterLink to="/prontuarios" class="text-sm text-[#7C5CFC] hover:underline"
+            >Ver todos</RouterLink
+          >
         </div>
         <div v-if="prontuarios.length === 0" class="px-6 py-8 text-center text-sm text-[#64748B]">
           Nenhuma evolução registrada
@@ -178,8 +216,6 @@ const statusMap: Record<string, { label: string; variant: any }> = {
       </BaseCard>
     </template>
 
-    <div v-else class="text-center py-16 text-[#64748B]">
-      Paciente não encontrado.
-    </div>
+    <div v-else class="text-center py-16 text-[#64748B]">Paciente não encontrado.</div>
   </div>
 </template>

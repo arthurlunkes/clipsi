@@ -23,7 +23,7 @@ class GeminiProvider implements AIProvider {
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
         }),
-      }
+      },
     )
 
     if (!response.ok) throw new Error(`Erro na API Gemini: ${response.statusText}`)

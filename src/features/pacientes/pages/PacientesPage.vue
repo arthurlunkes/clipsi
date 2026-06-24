@@ -4,14 +4,13 @@ import { useRouter } from 'vue-router'
 import { usePacientes } from '../composables/usePacientes'
 import BaseCard from '@/shared/components/ui/BaseCard.vue'
 import BaseButton from '@/shared/components/ui/BaseButton.vue'
-import BaseInput from '@/shared/components/ui/BaseInput.vue'
 import BaseBadge from '@/shared/components/ui/BaseBadge.vue'
 import BasePagination from '@/shared/components/ui/BasePagination.vue'
 import BaseModal from '@/shared/components/ui/BaseModal.vue'
 import BaseEmptyState from '@/shared/components/ui/BaseEmptyState.vue'
 import SkeletonLoader from '@/shared/components/ui/SkeletonLoader.vue'
 import { UserPlus, Search, Eye, Pencil, Trash2, Users } from 'lucide-vue-next'
-import { format, parseISO, differenceInYears } from 'date-fns'
+import { parseISO, differenceInYears } from 'date-fns'
 
 const router = useRouter()
 const { loading, search, currentPage, totalPages, paginated, filtered, remove } = usePacientes()
@@ -28,13 +27,16 @@ async function handleDelete() {
 }
 
 function age(dataNascimento: string) {
-  try { return differenceInYears(new Date(), parseISO(dataNascimento)) } catch { return '-' }
+  try {
+    return differenceInYears(new Date(), parseISO(dataNascimento))
+  } catch {
+    return '-'
+  }
 }
 </script>
 
 <template>
   <div class="p-4 lg:p-6 max-w-7xl mx-auto space-y-5">
-
     <!-- Toolbar -->
     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
       <div class="flex-1 relative">
@@ -63,7 +65,11 @@ function age(dataNascimento: string) {
         <BaseEmptyState
           v-else-if="paginated.length === 0"
           title="Nenhum paciente encontrado"
-          :description="search ? 'Tente buscar com outros termos.' : 'Cadastre o primeiro paciente clicando em Novo Paciente.'"
+          :description="
+            search
+              ? 'Tente buscar com outros termos.'
+              : 'Cadastre o primeiro paciente clicando em Novo Paciente.'
+          "
         >
           <template #icon>
             <Users :size="32" class="text-[#94A3B8]" />
@@ -75,14 +81,17 @@ function age(dataNascimento: string) {
           </template>
         </BaseEmptyState>
 
-        <div
-          v-else
-          v-for="p in paginated"
-          :key="p.id"
-          class="p-4 flex items-center gap-3"
-        >
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0">
-            <span class="text-xs font-bold text-white">{{ p.nome.split(' ').map(n => n[0]).slice(0, 2).join('') }}</span>
+        <div v-else v-for="p in paginated" :key="p.id" class="p-4 flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0"
+          >
+            <span class="text-xs font-bold text-white">{{
+              p.nome
+                .split(' ')
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join('')
+            }}</span>
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-[#1E293B] truncate">{{ p.nome }}</p>
@@ -91,11 +100,18 @@ function age(dataNascimento: string) {
           </div>
           <div class="flex items-center gap-1">
             <RouterLink :to="`/pacientes/${p.id}`">
-              <button class="p-2 text-[#64748B] hover:text-[#7C5CFC] hover:bg-[#EDE9FE] rounded-lg transition-colors" aria-label="Ver perfil">
+              <button
+                class="p-2 text-[#64748B] hover:text-[#7C5CFC] hover:bg-[#EDE9FE] rounded-lg transition-colors"
+                aria-label="Ver perfil"
+              >
                 <Eye :size="16" />
               </button>
             </RouterLink>
-            <button @click="confirmDelete = p.id!" class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors" aria-label="Excluir">
+            <button
+              @click="confirmDelete = p.id!"
+              class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors"
+              aria-label="Excluir"
+            >
               <Trash2 :size="16" />
             </button>
           </div>
@@ -107,12 +123,36 @@ function age(dataNascimento: string) {
         <table class="w-full" aria-label="Lista de pacientes">
           <thead>
             <tr class="border-b border-[#F1F5F9]">
-              <th class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">Paciente</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">CPF</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">Idade</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">Telefone</th>
-              <th class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">Status</th>
-              <th class="text-right px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide">Ações</th>
+              <th
+                class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                Paciente
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                CPF
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                Idade
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                Telefone
+              </th>
+              <th
+                class="text-left px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                Status
+              </th>
+              <th
+                class="text-right px-6 py-3 text-xs font-semibold text-[#64748B] uppercase tracking-wide"
+              >
+                Ações
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-[#F8FAFC]">
@@ -128,7 +168,9 @@ function age(dataNascimento: string) {
               <td colspan="6">
                 <BaseEmptyState
                   title="Nenhum paciente encontrado"
-                  :description="search ? 'Tente buscar com outros termos.' : 'Cadastre o primeiro paciente.'"
+                  :description="
+                    search ? 'Tente buscar com outros termos.' : 'Cadastre o primeiro paciente.'
+                  "
                 />
               </td>
             </tr>
@@ -141,8 +183,16 @@ function age(dataNascimento: string) {
             >
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0">
-                    <span class="text-xs font-bold text-white">{{ p.nome.split(' ').map(n => n[0]).slice(0, 2).join('') }}</span>
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-[#7C5CFC] to-[#A78BFA] flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="text-xs font-bold text-white">{{
+                      p.nome
+                        .split(' ')
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join('')
+                    }}</span>
                   </div>
                   <div>
                     <p class="text-sm font-medium text-[#1E293B]">{{ p.nome }}</p>
@@ -161,16 +211,26 @@ function age(dataNascimento: string) {
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-1">
                   <RouterLink :to="`/pacientes/${p.id}`">
-                    <button class="p-2 text-[#64748B] hover:text-[#7C5CFC] hover:bg-[#EDE9FE] rounded-lg transition-colors" aria-label="Ver perfil">
+                    <button
+                      class="p-2 text-[#64748B] hover:text-[#7C5CFC] hover:bg-[#EDE9FE] rounded-lg transition-colors"
+                      aria-label="Ver perfil"
+                    >
                       <Eye :size="16" />
                     </button>
                   </RouterLink>
                   <RouterLink :to="`/pacientes/${p.id}/editar`">
-                    <button class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors" aria-label="Editar">
+                    <button
+                      class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+                      aria-label="Editar"
+                    >
                       <Pencil :size="16" />
                     </button>
                   </RouterLink>
-                  <button @click="confirmDelete = p.id!" class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors" aria-label="Excluir">
+                  <button
+                    @click="confirmDelete = p.id!"
+                    class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors"
+                    aria-label="Excluir"
+                  >
                     <Trash2 :size="16" />
                   </button>
                 </div>
@@ -192,17 +252,24 @@ function age(dataNascimento: string) {
     </BaseCard>
 
     <!-- Delete modal -->
-    <BaseModal :open="!!confirmDelete" title="Excluir paciente" size="sm" @close="confirmDelete = null">
+    <BaseModal
+      :open="!!confirmDelete"
+      title="Excluir paciente"
+      size="sm"
+      @close="confirmDelete = null"
+    >
       <p class="text-sm text-[#64748B]">
-        Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita e todos os dados associados serão perdidos.
+        Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita e todos os
+        dados associados serão perdidos.
       </p>
       <template #footer>
         <div class="flex gap-3 justify-end">
           <BaseButton variant="outline" @click="confirmDelete = null">Cancelar</BaseButton>
-          <BaseButton variant="danger" :loading="deleting" @click="handleDelete">Excluir</BaseButton>
+          <BaseButton variant="danger" :loading="deleting" @click="handleDelete"
+            >Excluir</BaseButton
+          >
         </div>
       </template>
     </BaseModal>
-
   </div>
 </template>

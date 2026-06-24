@@ -5,7 +5,7 @@ interface Props {
   border?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   padding: 'md',
   hover: false,
   border: true,
@@ -25,7 +25,9 @@ const paddings = {
     :class="[
       paddings[padding],
       border ? 'border border-[#EEF0F7]' : '',
-      hover ? 'hover:shadow-(--shadow-lifted) hover:-translate-y-1 hover:border-[#DDD6FE] transition-all duration-300 cursor-pointer' : '',
+      hover
+        ? 'hover:shadow-(--shadow-lifted) hover:-translate-y-1 hover:border-[#DDD6FE] transition-all duration-300 cursor-pointer'
+        : '',
     ]"
   >
     <slot />

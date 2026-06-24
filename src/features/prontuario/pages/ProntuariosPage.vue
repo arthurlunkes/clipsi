@@ -13,7 +13,15 @@ import BaseInput from '@/shared/components/ui/BaseInput.vue'
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue'
 import BaseEmptyState from '@/shared/components/ui/BaseEmptyState.vue'
 import SkeletonLoader from '@/shared/components/ui/SkeletonLoader.vue'
-import { Plus, FileText, BrainCircuit, Pencil, Trash2, ChevronDown, ChevronUp } from 'lucide-vue-next'
+import {
+  Plus,
+  FileText,
+  BrainCircuit,
+  Pencil,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-vue-next'
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -27,7 +35,12 @@ const aiLoading = ref(false)
 const editingId = ref<number | null>(null)
 const expanded = ref<number | null>(null)
 
-const form = ref({ pacienteId: 0, titulo: '', conteudo: '', sessaoNumero: undefined as number | undefined })
+const form = ref({
+  pacienteId: 0,
+  titulo: '',
+  conteudo: '',
+  sessaoNumero: undefined as number | undefined,
+})
 const errors = ref<Record<string, string>>({})
 
 const pacienteOptions = ref<{ label: string; value: number }[]>([])
@@ -38,14 +51,18 @@ async function load() {
   const [pr, p] = await Promise.all([prontuarioService.getAll(), pacienteService.getAll()])
   prontuarios.value = pr
   pacientes.value = p
-  pacienteOptions.value = p.map(p => ({ label: p.nome, value: p.id! }))
-  filterOptions.value = [{ label: 'Todos os pacientes', value: '' }, ...p.map(p => ({ label: p.nome, value: String(p.id) }))]
+  pacienteOptions.value = p.map((p) => ({ label: p.nome, value: p.id! }))
+  filterOptions.value = [
+    { label: 'Todos os pacientes', value: '' },
+    ...p.map((p) => ({ label: p.nome, value: String(p.id) })),
+  ]
   loading.value = false
 }
 
-const filtered = () => filterPaciente.value
-  ? prontuarios.value.filter(p => String(p.pacienteId) === filterPaciente.value)
-  : prontuarios.value
+const filtered = () =>
+  filterPaciente.value
+    ? prontuarios.value.filter((p) => String(p.pacienteId) === filterPaciente.value)
+    : prontuarios.value
 
 function openNew() {
   form.value = { pacienteId: 0, titulo: '', conteudo: '', sessaoNumero: undefined }
@@ -55,7 +72,12 @@ function openNew() {
 }
 
 function openEdit(p: Prontuario) {
-  form.value = { pacienteId: p.pacienteId, titulo: p.titulo, conteudo: p.conteudo, sessaoNumero: p.sessaoNumero }
+  form.value = {
+    pacienteId: p.pacienteId,
+    titulo: p.titulo,
+    conteudo: p.conteudo,
+    sessaoNumero: p.sessaoNumero,
+  }
   editingId.value = p.id!
   showModal.value = true
 }
@@ -72,8 +94,12 @@ async function save() {
   if (!validate()) return
   saving.value = true
   try {
-    const paciente = pacientes.value.find(p => p.id === Number(form.value.pacienteId))
-    const data = { ...form.value, pacienteId: Number(form.value.pacienteId), pacienteNome: paciente?.nome }
+    const paciente = pacientes.value.find((p) => p.id === Number(form.value.pacienteId))
+    const data = {
+      ...form.value,
+      pacienteId: Number(form.value.pacienteId),
+      pacienteNome: paciente?.nome,
+    }
     if (editingId.value) {
       await prontuarioService.update(editingId.value, data)
     } else {
@@ -89,7 +115,7 @@ async function save() {
 async function remove(id: number) {
   if (!confirm('Excluir esta evolução?')) return
   await prontuarioService.remove(id)
-  prontuarios.value = prontuarios.value.filter(p => p.id !== id)
+  prontuarios.value = prontuarios.value.filter((p) => p.id !== id)
 }
 
 async function generateAI(p: Prontuario) {
@@ -106,7 +132,11 @@ async function generateAI(p: Prontuario) {
 }
 
 function fmt(d: string) {
-  try { return format(parseISO(d), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) } catch { return d }
+  try {
+    return format(parseISO(d), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
+  } catch {
+    return d
+  }
 }
 
 onMounted(load)
@@ -114,7 +144,6 @@ onMounted(load)
 
 <template>
   <div class="p-4 lg:p-6 max-w-4xl mx-auto space-y-4">
-
     <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
       <div class="w-48">
         <BaseSelect
@@ -124,9 +153,7 @@ onMounted(load)
           placeholder="Todos os pacientes"
         />
       </div>
-      <BaseButton @click="openNew">
-        <Plus :size="16" /> Nova evolução
-      </BaseButton>
+      <BaseButton @click="openNew"> <Plus :size="16" /> Nova evolução </BaseButton>
     </div>
 
     <div v-if="loading" class="space-y-3">
@@ -146,23 +173,38 @@ onMounted(load)
         <div class="p-4">
           <div class="flex items-start justify-between gap-3">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-[#EDE9FE] rounded-xl flex items-center justify-center flex-shrink-0">
+              <div
+                class="w-10 h-10 bg-[#EDE9FE] rounded-xl flex items-center justify-center flex-shrink-0"
+              >
                 <FileText :size="18" class="text-[#7C5CFC]" />
               </div>
               <div>
                 <p class="text-sm font-semibold text-[#1E293B]">{{ p.titulo }}</p>
                 <p class="text-xs text-[#64748B]">{{ p.pacienteNome }} · {{ fmt(p.createdAt) }}</p>
-                <p v-if="p.sessaoNumero" class="text-xs text-[#94A3B8]">Sessão {{ p.sessaoNumero }}</p>
+                <p v-if="p.sessaoNumero" class="text-xs text-[#94A3B8]">
+                  Sessão {{ p.sessaoNumero }}
+                </p>
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button @click="openEdit(p)" class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors" aria-label="Editar">
+              <button
+                @click="openEdit(p)"
+                class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+                aria-label="Editar"
+              >
                 <Pencil :size="15" />
               </button>
-              <button @click="remove(p.id!)" class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors" aria-label="Excluir">
+              <button
+                @click="remove(p.id!)"
+                class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors"
+                aria-label="Excluir"
+              >
                 <Trash2 :size="15" />
               </button>
-              <button @click="expanded = expanded === p.id ? null : p.id!" class="p-2 text-[#64748B] hover:bg-[#F1F5F9] rounded-lg transition-colors">
+              <button
+                @click="expanded = expanded === p.id ? null : p.id!"
+                class="p-2 text-[#64748B] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+              >
                 <ChevronUp v-if="expanded === p.id" :size="15" />
                 <ChevronDown v-else :size="15" />
               </button>
@@ -191,16 +233,50 @@ onMounted(load)
       </BaseCard>
     </div>
 
-    <BaseModal :open="showModal" :title="editingId ? 'Editar evolução' : 'Nova evolução'" size="lg" @close="showModal = false">
+    <BaseModal
+      :open="showModal"
+      :title="editingId ? 'Editar evolução' : 'Nova evolução'"
+      size="lg"
+      @close="showModal = false"
+    >
       <form @submit.prevent="save" class="space-y-4" novalidate>
-        <BaseSelect id="pacienteIdPr" v-model="form.pacienteId" label="Paciente" :options="pacienteOptions" placeholder="Selecione o paciente" :error="errors.pacienteId" required />
+        <BaseSelect
+          id="pacienteIdPr"
+          v-model="form.pacienteId"
+          label="Paciente"
+          :options="pacienteOptions"
+          placeholder="Selecione o paciente"
+          :error="errors.pacienteId"
+          required
+        />
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div class="sm:col-span-3">
-            <BaseInput id="tituloPr" v-model="form.titulo" label="Título da sessão" placeholder="Ex: Sessão 5 - Técnicas cognitivas" :error="errors.titulo" required />
+            <BaseInput
+              id="tituloPr"
+              v-model="form.titulo"
+              label="Título da sessão"
+              placeholder="Ex: Sessão 5 - Técnicas cognitivas"
+              :error="errors.titulo"
+              required
+            />
           </div>
-          <BaseInput id="sessaoNum" v-model="form.sessaoNumero" type="number" label="Nº sessão" placeholder="5" />
+          <BaseInput
+            id="sessaoNum"
+            v-model="form.sessaoNumero"
+            type="number"
+            label="Nº sessão"
+            placeholder="5"
+          />
         </div>
-        <BaseTextarea id="conteudoPr" v-model="form.conteudo" label="Evolução" placeholder="Descreva o que ocorreu na sessão, observações clínicas, técnicas utilizadas..." :rows="6" :error="errors.conteudo" required />
+        <BaseTextarea
+          id="conteudoPr"
+          v-model="form.conteudo"
+          label="Evolução"
+          placeholder="Descreva o que ocorreu na sessão, observações clínicas, técnicas utilizadas..."
+          :rows="6"
+          :error="errors.conteudo"
+          required
+        />
       </form>
       <template #footer>
         <div class="flex gap-3 justify-end">
@@ -209,6 +285,5 @@ onMounted(load)
         </div>
       </template>
     </BaseModal>
-
   </div>
 </template>

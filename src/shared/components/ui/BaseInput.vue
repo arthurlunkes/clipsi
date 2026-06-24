@@ -11,7 +11,7 @@ interface Props {
   id?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   type: 'text',
   disabled: false,
   required: false,
@@ -24,11 +24,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col gap-1">
-    <label
-      v-if="label"
-      :for="id"
-      class="text-sm font-medium text-[#374151]"
-    >
+    <label v-if="label" :for="id" class="text-sm font-medium text-[#374151]">
       {{ label }}
       <span v-if="required" class="text-[#EF4444] ml-0.5" aria-hidden="true">*</span>
     </label>
@@ -43,7 +39,11 @@ const emit = defineEmits<{
       :aria-invalid="!!error"
       :aria-describedby="error ? `${id}-error` : hint ? `${id}-hint` : undefined"
       class="w-full px-3.5 py-2.5 text-sm bg-white border rounded-xl transition-all duration-200 placeholder-[#94A3B8] text-[#1E293B] disabled:bg-[#F1F5F9] disabled:cursor-not-allowed"
-      :class="error ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/15 outline-none' : 'border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#7C5CFC] focus:ring-4 focus:ring-[#7C5CFC]/15 outline-none'"
+      :class="
+        error
+          ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/15 outline-none'
+          : 'border-[#E2E8F0] hover:border-[#CBD5E1] focus:border-[#7C5CFC] focus:ring-4 focus:ring-[#7C5CFC]/15 outline-none'
+      "
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
 

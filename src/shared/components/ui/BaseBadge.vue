@@ -5,7 +5,7 @@ interface Props {
   dot?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   variant: 'neutral',
   size: 'md',
   dot: false,
@@ -40,7 +40,12 @@ const sizes = {
     class="inline-flex items-center gap-1.5 font-semibold rounded-full"
     :class="[variants[variant], sizes[size]]"
   >
-    <span v-if="dot" class="w-1.5 h-1.5 rounded-full animate-pulse" :class="dotColors[variant]" aria-hidden="true" />
+    <span
+      v-if="dot"
+      class="w-1.5 h-1.5 rounded-full animate-pulse"
+      :class="dotColors[variant]"
+      aria-hidden="true"
+    />
     <slot />
   </span>
 </template>

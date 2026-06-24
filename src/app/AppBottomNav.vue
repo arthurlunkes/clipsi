@@ -1,16 +1,8 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { LayoutDashboard, Users, Calendar, Clock, DollarSign } from 'lucide-vue-next'
+import { BOTTOM_NAV_ITEMS } from '@/router/routes'
 
 const route = useRoute()
-
-const items = [
-  { label: 'Início', icon: LayoutDashboard, to: '/dashboard' },
-  { label: 'Pacientes', icon: Users, to: '/pacientes' },
-  { label: 'Agenda', icon: Calendar, to: '/agenda' },
-  { label: 'Fila', icon: Clock, to: '/fila-espera' },
-  { label: 'Finanças', icon: DollarSign, to: '/financeiro' },
-]
 
 const isActive = (to: string) => route.path === to || route.path.startsWith(to + '/')
 </script>
@@ -22,7 +14,7 @@ const isActive = (to: string) => route.path === to || route.path.startsWith(to +
   >
     <div class="flex items-stretch">
       <RouterLink
-        v-for="item in items"
+        v-for="item in BOTTOM_NAV_ITEMS"
         :key="item.to"
         :to="item.to"
         class="relative flex-1 flex flex-col items-center justify-center gap-1 py-2 px-1 text-xs font-medium transition-colors min-h-[60px] group"

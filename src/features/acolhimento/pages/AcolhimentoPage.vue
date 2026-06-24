@@ -10,7 +10,6 @@ import BaseButton from '@/shared/components/ui/BaseButton.vue'
 import BaseModal from '@/shared/components/ui/BaseModal.vue'
 import BaseSelect from '@/shared/components/ui/BaseSelect.vue'
 import BaseTextarea from '@/shared/components/ui/BaseTextarea.vue'
-import BaseBadge from '@/shared/components/ui/BaseBadge.vue'
 import BaseEmptyState from '@/shared/components/ui/BaseEmptyState.vue'
 import SkeletonLoader from '@/shared/components/ui/SkeletonLoader.vue'
 import { Plus, Heart, BrainCircuit, Pencil, Trash2, ChevronDown, ChevronUp } from 'lucide-vue-next'
@@ -42,12 +41,18 @@ async function load() {
   const [a, p] = await Promise.all([acolhimentoService.getAll(), pacienteService.getAll()])
   acolhimentos.value = a
   pacientes.value = p
-  pacienteOptions.value = p.map(p => ({ label: p.nome, value: p.id! }))
+  pacienteOptions.value = p.map((p) => ({ label: p.nome, value: p.id! }))
   loading.value = false
 }
 
 function openNew() {
-  form.value = { pacienteId: 0, queixaPrincipal: '', historico: '', encaminhamento: '', observacoes: '' }
+  form.value = {
+    pacienteId: 0,
+    queixaPrincipal: '',
+    historico: '',
+    encaminhamento: '',
+    observacoes: '',
+  }
   editingId.value = null
   errors.value = {}
   showModal.value = true
@@ -69,7 +74,8 @@ function openEdit(a: Acolhimento) {
 function validate() {
   errors.value = {}
   if (!form.value.pacienteId) errors.value.pacienteId = 'Selecione um paciente'
-  if (!form.value.queixaPrincipal.trim()) errors.value.queixaPrincipal = 'Queixa principal é obrigatória'
+  if (!form.value.queixaPrincipal.trim())
+    errors.value.queixaPrincipal = 'Queixa principal é obrigatória'
   if (!form.value.historico.trim()) errors.value.historico = 'Histórico é obrigatório'
   return Object.keys(errors.value).length === 0
 }
@@ -78,8 +84,12 @@ async function save() {
   if (!validate()) return
   saving.value = true
   try {
-    const paciente = pacientes.value.find(p => p.id === Number(form.value.pacienteId))
-    const data = { ...form.value, pacienteId: Number(form.value.pacienteId), pacienteNome: paciente?.nome }
+    const paciente = pacientes.value.find((p) => p.id === Number(form.value.pacienteId))
+    const data = {
+      ...form.value,
+      pacienteId: Number(form.value.pacienteId),
+      pacienteNome: paciente?.nome,
+    }
     if (editingId.value) {
       await acolhimentoService.update(editingId.value, data)
     } else {
@@ -95,13 +105,15 @@ async function save() {
 async function remove(id: number) {
   if (!confirm('Deseja excluir este acolhimento?')) return
   await acolhimentoService.remove(id)
-  acolhimentos.value = acolhimentos.value.filter(a => a.id !== id)
+  acolhimentos.value = acolhimentos.value.filter((a) => a.id !== id)
 }
 
 async function generateAI(a: Acolhimento) {
   aiLoading.value = true
   try {
-    const resumo = await aiService.generateSummary(aiPrompts.acolhimento(a.queixaPrincipal, a.historico))
+    const resumo = await aiService.generateSummary(
+      aiPrompts.acolhimento(a.queixaPrincipal, a.historico),
+    )
     await acolhimentoService.update(a.id!, { resumoIA: resumo })
     await load()
   } catch (e: any) {
@@ -112,7 +124,11 @@ async function generateAI(a: Acolhimento) {
 }
 
 function fmt(d: string) {
-  try { return format(parseISO(d), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) } catch { return d }
+  try {
+    return format(parseISO(d), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
+  } catch {
+    return d
+  }
 }
 
 onMounted(load)
@@ -120,12 +136,9 @@ onMounted(load)
 
 <template>
   <div class="p-4 lg:p-6 max-w-4xl mx-auto space-y-4">
-
     <div class="flex items-center justify-between">
       <p class="text-sm text-[#64748B]">Registros de acolhimento dos pacientes</p>
-      <BaseButton @click="openNew">
-        <Plus :size="16" /> Novo acolhimento
-      </BaseButton>
+      <BaseButton @click="openNew"> <Plus :size="16" /> Novo acolhimento </BaseButton>
     </div>
 
     <div v-if="loading" class="space-y-3">
@@ -141,15 +154,13 @@ onMounted(load)
     </BaseEmptyState>
 
     <div v-else class="space-y-3">
-      <BaseCard
-        v-for="a in acolhimentos"
-        :key="a.id"
-        padding="none"
-      >
+      <BaseCard v-for="a in acolhimentos" :key="a.id" padding="none">
         <div class="p-4">
           <div class="flex items-start justify-between gap-3">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-[#FEE2E2] rounded-xl flex items-center justify-center flex-shrink-0">
+              <div
+                class="w-10 h-10 bg-[#FEE2E2] rounded-xl flex items-center justify-center flex-shrink-0"
+              >
                 <Heart :size="18" class="text-[#EF4444]" />
               </div>
               <div>
@@ -158,13 +169,25 @@ onMounted(load)
               </div>
             </div>
             <div class="flex items-center gap-1">
-              <button @click="openEdit(a)" class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors" aria-label="Editar">
+              <button
+                @click="openEdit(a)"
+                class="p-2 text-[#64748B] hover:text-[#1E293B] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+                aria-label="Editar"
+              >
                 <Pencil :size="15" />
               </button>
-              <button @click="remove(a.id!)" class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors" aria-label="Excluir">
+              <button
+                @click="remove(a.id!)"
+                class="p-2 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2] rounded-lg transition-colors"
+                aria-label="Excluir"
+              >
                 <Trash2 :size="15" />
               </button>
-              <button @click="expanded = expanded === a.id ? null : a.id!" class="p-2 text-[#64748B] hover:bg-[#F1F5F9] rounded-lg transition-colors" :aria-label="expanded === a.id ? 'Recolher' : 'Expandir'">
+              <button
+                @click="expanded = expanded === a.id ? null : a.id!"
+                class="p-2 text-[#64748B] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+                :aria-label="expanded === a.id ? 'Recolher' : 'Expandir'"
+              >
                 <ChevronUp v-if="expanded === a.id" :size="15" />
                 <ChevronDown v-else :size="15" />
               </button>
@@ -176,17 +199,26 @@ onMounted(load)
           </div>
         </div>
 
-        <div v-if="expanded === a.id" class="px-4 pb-4 border-t border-[#F1F5F9] mt-0 space-y-3 pt-3">
+        <div
+          v-if="expanded === a.id"
+          class="px-4 pb-4 border-t border-[#F1F5F9] mt-0 space-y-3 pt-3"
+        >
           <div>
-            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">Histórico</p>
+            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">
+              Histórico
+            </p>
             <p class="text-sm text-[#374151]">{{ a.historico }}</p>
           </div>
           <div v-if="a.encaminhamento">
-            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">Encaminhamento</p>
+            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">
+              Encaminhamento
+            </p>
             <p class="text-sm text-[#374151]">{{ a.encaminhamento }}</p>
           </div>
           <div v-if="a.observacoes">
-            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">Observações</p>
+            <p class="text-xs font-semibold text-[#64748B] uppercase tracking-wide mb-1">
+              Observações
+            </p>
             <p class="text-sm text-[#374151]">{{ a.observacoes }}</p>
           </div>
           <div v-if="a.resumoIA" class="bg-[#EDE9FE] p-3 rounded-lg">
@@ -204,7 +236,12 @@ onMounted(load)
       </BaseCard>
     </div>
 
-    <BaseModal :open="showModal" :title="editingId ? 'Editar acolhimento' : 'Novo acolhimento'" size="lg" @close="showModal = false">
+    <BaseModal
+      :open="showModal"
+      :title="editingId ? 'Editar acolhimento' : 'Novo acolhimento'"
+      size="lg"
+      @close="showModal = false"
+    >
       <form @submit.prevent="save" class="space-y-4" novalidate>
         <BaseSelect
           id="pacienteIdAc"
@@ -215,10 +252,38 @@ onMounted(load)
           :error="errors.pacienteId"
           required
         />
-        <BaseTextarea id="queixaPrincipal" v-model="form.queixaPrincipal" label="Queixa principal" placeholder="Descreva a queixa principal do paciente..." :rows="3" :error="errors.queixaPrincipal" required />
-        <BaseTextarea id="historico" v-model="form.historico" label="Histórico" placeholder="Histórico clínico, familiar e social..." :rows="4" :error="errors.historico" required />
-        <BaseTextarea id="encaminhamento" v-model="form.encaminhamento" label="Encaminhamento" placeholder="Por quem foi encaminhado..." :rows="2" />
-        <BaseTextarea id="observacoesAc" v-model="form.observacoes" label="Observações" placeholder="Observações adicionais..." :rows="2" />
+        <BaseTextarea
+          id="queixaPrincipal"
+          v-model="form.queixaPrincipal"
+          label="Queixa principal"
+          placeholder="Descreva a queixa principal do paciente..."
+          :rows="3"
+          :error="errors.queixaPrincipal"
+          required
+        />
+        <BaseTextarea
+          id="historico"
+          v-model="form.historico"
+          label="Histórico"
+          placeholder="Histórico clínico, familiar e social..."
+          :rows="4"
+          :error="errors.historico"
+          required
+        />
+        <BaseTextarea
+          id="encaminhamento"
+          v-model="form.encaminhamento"
+          label="Encaminhamento"
+          placeholder="Por quem foi encaminhado..."
+          :rows="2"
+        />
+        <BaseTextarea
+          id="observacoesAc"
+          v-model="form.observacoes"
+          label="Observações"
+          placeholder="Observações adicionais..."
+          :rows="2"
+        />
       </form>
       <template #footer>
         <div class="flex gap-3 justify-end">
@@ -227,6 +292,5 @@ onMounted(load)
         </div>
       </template>
     </BaseModal>
-
   </div>
 </template>

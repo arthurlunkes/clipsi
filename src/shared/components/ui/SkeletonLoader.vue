@@ -5,7 +5,7 @@ interface Props {
   circle?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   lines: 3,
   height: 'h-4',
   circle: false,

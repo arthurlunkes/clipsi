@@ -76,12 +76,20 @@ async function handleSubmit() {
 <template>
   <div class="p-4 lg:p-6 max-w-2xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
-      <button @click="router.back()" class="p-2 rounded-lg text-[#64748B] hover:bg-[#F1F5F9] transition-colors" aria-label="Voltar">
+      <button
+        @click="router.back()"
+        class="p-2 rounded-lg text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
+        aria-label="Voltar"
+      >
         <ArrowLeft :size="20" />
       </button>
       <div>
-        <h1 class="text-lg font-semibold text-[#1E293B]">{{ isEdit ? 'Editar Paciente' : 'Novo Paciente' }}</h1>
-        <p class="text-sm text-[#64748B]">{{ isEdit ? 'Atualize os dados do paciente' : 'Preencha os dados para cadastrar' }}</p>
+        <h1 class="text-lg font-semibold text-[#1E293B]">
+          {{ isEdit ? 'Editar Paciente' : 'Novo Paciente' }}
+        </h1>
+        <p class="text-sm text-[#64748B]">
+          {{ isEdit ? 'Atualize os dados do paciente' : 'Preencha os dados para cadastrar' }}
+        </p>
       </div>
     </div>
 
@@ -90,10 +98,31 @@ async function handleSubmit() {
         <BaseCard padding="md">
           <h2 class="text-sm font-semibold text-[#1E293B] mb-4">Dados pessoais</h2>
           <div class="space-y-4">
-            <BaseInput id="nome" v-model="form.nome" label="Nome completo" placeholder="Ex: Ana Clara Souza" :error="errors.nome" required />
+            <BaseInput
+              id="nome"
+              v-model="form.nome"
+              label="Nome completo"
+              placeholder="Ex: Ana Clara Souza"
+              :error="errors.nome"
+              required
+            />
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <BaseInput id="cpf" v-model="form.cpf" label="CPF" placeholder="000.000.000-00" :error="errors.cpf" required />
-              <BaseInput id="dataNascimento" v-model="form.dataNascimento" type="date" label="Data de nascimento" :error="errors.dataNascimento" required />
+              <BaseInput
+                id="cpf"
+                v-model="form.cpf"
+                label="CPF"
+                placeholder="000.000.000-00"
+                :error="errors.cpf"
+                required
+              />
+              <BaseInput
+                id="dataNascimento"
+                v-model="form.dataNascimento"
+                type="date"
+                label="Data de nascimento"
+                :error="errors.dataNascimento"
+                required
+              />
             </div>
           </div>
         </BaseCard>
@@ -102,16 +131,41 @@ async function handleSubmit() {
           <h2 class="text-sm font-semibold text-[#1E293B] mb-4">Contato</h2>
           <div class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <BaseInput id="telefone" v-model="form.telefone" label="Telefone" placeholder="(11) 99999-9999" :error="errors.telefone" required />
-              <BaseInput id="email" v-model="form.email" type="email" label="E-mail" placeholder="email@exemplo.com" :error="errors.email" required />
+              <BaseInput
+                id="telefone"
+                v-model="form.telefone"
+                label="Telefone"
+                placeholder="(11) 99999-9999"
+                :error="errors.telefone"
+                required
+              />
+              <BaseInput
+                id="email"
+                v-model="form.email"
+                type="email"
+                label="E-mail"
+                placeholder="email@exemplo.com"
+                :error="errors.email"
+                required
+              />
             </div>
-            <BaseInput id="endereco" v-model="form.endereco" label="Endereço" placeholder="Rua, número, bairro, cidade" />
+            <BaseInput
+              id="endereco"
+              v-model="form.endereco"
+              label="Endereço"
+              placeholder="Rua, número, bairro, cidade"
+            />
           </div>
         </BaseCard>
 
         <BaseCard padding="md">
           <h2 class="text-sm font-semibold text-[#1E293B] mb-4">Observações</h2>
-          <BaseTextarea id="observacoes" v-model="form.observacoes" placeholder="Anotações adicionais sobre o paciente..." :rows="3" />
+          <BaseTextarea
+            id="observacoes"
+            v-model="form.observacoes"
+            placeholder="Anotações adicionais sobre o paciente..."
+            :rows="3"
+          />
         </BaseCard>
 
         <div class="flex gap-3 justify-end">
