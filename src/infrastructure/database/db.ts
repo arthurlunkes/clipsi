@@ -24,6 +24,9 @@ export class ClinicaDB extends Dexie {
       financeiro: '++id, tipo, data, createdAt',
       filaEspera: '++id, pacienteId, status, createdAt',
     })
+    this.version(2).stores({
+      pacientes: '++id, nome, cpf, email, telefone, ativo, createdAt',
+    })
   }
 }
 
