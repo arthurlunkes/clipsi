@@ -79,4 +79,4 @@ export const PAGE_TITLES: Record<string, string> = {
   [ROUTES.CONFIGURACOES]: 'Configurações',
 }
 
-export const APP_NAME = 'Clínica Psi'
+export const APP_NAME = 'CliPSI'

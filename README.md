@@ -1,4 +1,4 @@
-# Clínica Psi — Sistema de Gestão Psicológica
+# CliPSI — Sistema de Gestão Psicológica
 
 Trabalho acadêmico da disciplina de **Composição e Projeto Gráfico**.
 

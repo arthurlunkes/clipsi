@@ -174,10 +174,8 @@ async function reseed() {
     <!-- Sobre -->
     <BaseCard padding="md">
       <div class="text-center space-y-2">
-        <div class="w-12 h-12 bg-[#7C5CFC] rounded-2xl flex items-center justify-center mx-auto">
-          <BrainCircuit :size="24" class="text-white" />
-        </div>
-        <h3 class="text-base font-bold text-[#1E293B]">Clínica Psi</h3>
+        <img src="/logo.svg" alt="CliPSI" class="w-12 h-12 rounded-2xl shadow-primary mx-auto" />
+        <h3 class="text-base font-bold text-[#1E293B]">CliPSI</h3>
         <p class="text-sm text-[#64748B]">Sistema de Gestão Psicológica</p>
         <p class="text-xs text-[#94A3B8]">
           v1.0.0 · Trabalho acadêmico — Composição e Projeto Gráfico

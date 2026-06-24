@@ -1753,9 +1753,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clinica_psi@workspace:.":
+"clipsi@workspace:.":
   version: 0.0.0-use.local
-  resolution: "clinica_psi@workspace:."
+  resolution: "clipsi@workspace:."
   dependencies:
     "@fullcalendar/core": "npm:^6.1.21"
     "@fullcalendar/daygrid": "npm:^6.1.21"

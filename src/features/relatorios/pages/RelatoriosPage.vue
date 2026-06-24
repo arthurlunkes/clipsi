@@ -108,7 +108,7 @@ async function exportPDF() {
 
   doc.setFontSize(20)
   doc.setTextColor(124, 92, 252)
-  doc.text('Clínica Psi — Relatório Gerencial', 20, 25)
+  doc.text('CliPSI — Relatório Gerencial', 20, 25)
 
   doc.setFontSize(10)
   doc.setTextColor(100, 116, 139)
@@ -149,7 +149,7 @@ async function exportPDF() {
 
   doc.setFontSize(8)
   doc.setTextColor(148, 163, 184)
-  doc.text('Clínica Psi — Sistema de Gestão Psicológica', 20, 285)
+  doc.text('CliPSI — Sistema de Gestão Psicológica', 20, 285)
 
   doc.save(`relatorio-clinica-${format(new Date(), 'yyyy-MM-dd')}.pdf`)
 }

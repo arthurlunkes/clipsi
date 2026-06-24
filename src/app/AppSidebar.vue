@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import { BrainCircuit, X, ChevronsLeft } from 'lucide-vue-next'
+import { X, ChevronsLeft } from 'lucide-vue-next'
 import { useLayout } from '@/shared/composables/useLayout'
 import { NAV_ITEMS, CONFIG_NAV_ITEM, APP_NAME } from '@/router/routes'
 
@@ -77,11 +77,7 @@ onBeforeUnmount(stopResize)
       :class="collapsed ? 'justify-center' : 'justify-between'"
     >
       <div class="flex items-center gap-2.5 overflow-hidden">
-        <div
-          class="w-9 h-9 gradient-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-primary"
-        >
-          <BrainCircuit :size="19" class="text-white" />
-        </div>
+        <img src="/logo.svg" alt="CliPSI" class="w-9 h-9 rounded-xl flex-shrink-0 shadow-primary" />
         <div v-if="!collapsed" class="whitespace-nowrap">
           <p class="text-sm font-bold text-[#1E293B] leading-tight font-display">{{ APP_NAME }}</p>
           <p class="text-xs text-[#64748B]">Gestão Psicológica</p>
